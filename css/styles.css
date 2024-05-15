@@ -16,6 +16,7 @@ body {
     padding: 20px;
 }
 
+
 /* Estilos del encabezado */
 header {
     background: linear-gradient(#2F4C5C, #222744);
@@ -144,6 +145,8 @@ nav ul li a:hover {
 
 .login {
     width: 15%;
+    display: flex;
+    justify-content: center;
 }
 
 .login-button {
@@ -235,6 +238,21 @@ nav ul li a:hover {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(204, 0, 0, 0.5);
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1000;
+}
+
+.message-header {
+    background-color: #ccffcc;
+    color: #008800;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 136, 0, 0.5);
     position: fixed;
     top: 10px;
     left: 50%;
@@ -520,7 +538,11 @@ h2 {
     background: orange;
     color: white;
     border-radius: 50%;
-    padding: 2.5px 5px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 0.8em;
 }
 
@@ -626,6 +648,211 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     padding-right: 45px;
 }
 
+/* Estilos de la página checkout */
+.cuenta {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.cuenta-izq {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+}
+
+.cuenta-der {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: top;
+    border-left: 1px solid #616161;
+    width: 50%;
+}
+
+.login-form.checkout-login {
+    width: 70%;
+}
+
+.direccion {
+    background-color: #dadada;
+    border: 1px solid #b3b2b2;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.direccion p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.botones-centrados {
+    display: flex;
+    justify-content: center;
+}
+
+.direccion button {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 7px;
+    margin: 0 10px;
+    cursor: pointer;
+    font-family: 'Amaranth';
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+    text-decoration: none;
+}
+
+.direccion button:hover {
+    background-color: #2ba3b9;
+}
+
+.boton-derecha {
+    text-align: right;
+}
+
+.siguiente {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    font-family: 'Amaranth';
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.siguiente:hover {
+    background-color: darkorange;
+}
+
+.direccion-form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    width: 50%;
+    margin: 0 auto;
+}
+
+.direccion-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #222744;
+}
+
+.direccion-form input[type="text"], .direccion-form select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.direccion-form input[type="submit"] {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-family: 'Amaranth';
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.direccion-form input[type="submit"]:hover {
+    background-color: #2ba3b9;
+}
+
+.direccion-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.direccion-form input[type="submit"],
+.direccion-form a {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.direccion-form a {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1em;
+    font-family: 'Amaranth';
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.direccion-form a:hover {
+    background-color: darkorange;
+}
+
+.invitado-form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    width: 50%;
+    margin: 0 auto;
+}
+
+.invitado-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #222744;
+}
+
+.invitado-form input[type="text"], .invitado-form input[type="email"], .invitado-form input[type="tel"] {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.invitado-form input[type="submit"] {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+    font-family: 'Amaranth';
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.invitado-form input[type="submit"]:hover {
+    background-color: #2ba3b9;
+}
+
 /* Estilos del pie de página */
 footer {
     background-color: #222744;
@@ -638,6 +865,85 @@ footer {
 footer p {
     margin: 0;
     padding: 0;
+}
+
+
+/* Estilos pagina cuenta*/
+
+.perfil-input {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.perfil-input[readonly] {
+    background-color: #f9f9f9;
+}
+
+.perfil-input.editable {
+    border: 1px solid #007BFF;
+    background-color: #e7f3ff;
+}
+
+.perfil-edit-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.perfil-edit-button:hover {
+    background-color: #0056b3;
+}
+
+.perfil-save-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.perfil-save-button:hover {
+    background-color: #218838;
+}
+
+.perfil-section.edit-mode {
+    border: 1px solid #007BFF;
+    padding: 15px;
+    background-color: #e7f3ff;
+}
+
+.perfil-container-left {
+    width: 50%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.perfil-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.perfil-label {
+    margin-top: 10px;
+}
+
+.perfil-checkbox {
+    margin-top: 10px;
+}
+
+fieldset {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 /* Animaciones */

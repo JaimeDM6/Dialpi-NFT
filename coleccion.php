@@ -26,6 +26,7 @@
 ?>
 <?php include 'head.php'; ?>
     <div id="error-header" class="error-header"></div>
+    <div id="message-header" class="message-header"></div>
     <?php include 'header.php'; ?>
     <main>
         <div class="container">
@@ -103,13 +104,20 @@
                                 errorHeader.css('opacity', '0');
                             }, 3000);
                         } else {
-                            location.reload();
                             $('html, body').animate({ scrollTop: 0 }, 'fast');
+                            var messageHeader = $('#message-header');
+                            messageHeader.text(response.message);
+                            messageHeader.css('opacity', '1');
+                            setTimeout(function() {
+                                messageHeader.css('opacity', '0');
+                            }, 3000);
+                            location.reload();
                         }
                     }
                 });
             });
         });
     </script>
+    <script src="script/script.js"></script>
 </body>
 </html>
