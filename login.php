@@ -95,6 +95,21 @@
                     }
                 }
             });
+
+            $.ajax({
+                url: '/checkout',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        $('#error-message').text(response.message);
+                        $('html, body').animate({ scrollTop: 0 }, 'fast');
+                    } else {
+                        window.location.href = '/checkout?direccion';
+                    }
+                }
+            });
         });
 
         $('#toggle-password').click(function() {

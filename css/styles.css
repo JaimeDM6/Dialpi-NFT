@@ -245,6 +245,21 @@ nav ul li a:hover {
     z-index: 1000;
 }
 
+.message-header {
+    background-color: #ccffcc;
+    color: #008800;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 136, 0, 0.5);
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1000;
+}
+
 /* Estilos del contenido principal */
 main {
     padding: 20px 0;
@@ -521,7 +536,11 @@ h2 {
     background: orange;
     color: white;
     border-radius: 50%;
-    padding: 2.5px 5px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 0.8em;
 }
 
@@ -627,6 +646,108 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     padding-right: 45px;
 }
 
+/* Estilos de la página checkout */
+.cuenta {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.cuenta-izq {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+}
+
+.cuenta-der {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: top;
+    border-left: 1px solid #616161;
+    width: 50%;
+}
+
+.login-form.checkout-login {
+    width: 70%;
+}
+
+.direccion {
+    background-color: #dadada;
+    border: 1px solid #b3b2b2;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.direccion p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.direccion button {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Amaranth';
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+    text-decoration: none;
+}
+
+.direccion button:hover {
+    background-color: #2ba3b9;
+}
+
+.invitado-form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    width: 50%;
+    margin: 0 auto;
+}
+
+.invitado-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #222744;
+}
+
+.invitado-form input[type="text"], .invitado-form input[type="email"], .invitado-form input[type="tel"] {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.invitado-form input[type="submit"] {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+    font-family: 'Amaranth';
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.invitado-form input[type="submit"]:hover {
+    background-color: #2ba3b9;
+}
+
 /* Estilos del pie de página */
 footer {
     background-color: #222744;
@@ -640,29 +761,26 @@ footer p {
     margin: 0;
     padding: 0;
 }
+
+
 /* Estilos pagina cuenta*/
 
-
-/* Estilos para la mitad izquierda del perfil */
 .perfil-container-left {
     width: 50%;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Estilos para cada sección del perfil */
 .perfil-section {
     margin-bottom: 20px;
 }
 
-/* Estilos para las etiquetas de los campos del perfil */
 .perfil-label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-/* Estilos para los campos de entrada del perfil */
 .perfil-input {
     width: calc(100% - 40px);
     padding: 8px;
@@ -671,7 +789,6 @@ footer p {
     border-radius: 4px;
 }
 
-/* Estilos para los botones de edición del perfil */
 .perfil-edit-button {
     display: block;
     width: auto;
@@ -684,7 +801,6 @@ footer p {
     float: right;
 }
 
-/* Estilos para el botón de guardar cambios del perfil */
 .perfil-save-button {
     display: block;
     width: 100px;
@@ -697,17 +813,14 @@ footer p {
     cursor: pointer;
 }
 
-/* Estilos para el checkbox de confirmación de eliminación */
 .perfil-checkbox {
     margin-top: 5px;
 }
 
-/* Estilos para el texto de las leyendas de las secciones */
 legend {
     font-weight: bold;
     margin-bottom: 10px;
 }
-
 
 /* Animaciones */
 

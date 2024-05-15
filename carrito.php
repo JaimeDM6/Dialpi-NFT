@@ -12,6 +12,10 @@
             if ($key !== false) {
                 unset($_SESSION['cart'][$key]);
             }
+
+            if (empty($_SESSION['cart'])) {
+                unset($_SESSION['cart']);
+            }
         }
     }
 ?>
@@ -71,8 +75,13 @@
                     url: '/carrito',
                     method: 'POST',
                     data: { product_id: productId },
-                    success: function() {
-                        location.reload();
+                    success: function(response) {
+                        if (response.trim() !== 'No hay productos en el carrito.') {
+                            location.reload();
+                        } else {
+                            $('.container').html('<p>No hay productos en el carrito.</p>');
+                            $('table, .cart-total, .checkout-button-container').remove();
+                        }
                     }
                 });
             });
