@@ -16,6 +16,7 @@ body {
     padding: 20px;
 }
 
+
 /* Estilos del encabezado */
 header {
     background: linear-gradient(#2F4C5C, #222744);
@@ -639,6 +640,74 @@ footer p {
     margin: 0;
     padding: 0;
 }
+/* Estilos pagina cuenta*/
+
+
+/* Estilos para la mitad izquierda del perfil */
+.perfil-container-left {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilos para cada sección del perfil */
+.perfil-section {
+    margin-bottom: 20px;
+}
+
+/* Estilos para las etiquetas de los campos del perfil */
+.perfil-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Estilos para los campos de entrada del perfil */
+.perfil-input {
+    width: calc(100% - 40px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Estilos para los botones de edición del perfil */
+.perfil-edit-button {
+    display: block;
+    width: auto;
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+/* Estilos para el botón de guardar cambios del perfil */
+.perfil-save-button {
+    display: block;
+    width: 100px;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilos para el checkbox de confirmación de eliminación */
+.perfil-checkbox {
+    margin-top: 5px;
+}
+
+/* Estilos para el texto de las leyendas de las secciones */
+legend {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 
 /* Animaciones */
 

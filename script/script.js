@@ -44,6 +44,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
+var dropdownMenuMobile2 = document.querySelector('.dropdown-menu-mobile-2');
+var dropdownMobile = document.querySelector('.dropdown-mobile');
+var dropdownIcon2 = dropdownToggle.querySelector('i');
+
 dropdownButton.addEventListener('click', function() {
     if (containerHeaderMovil.style.height === '70px') {
         containerHeaderMovil.style.height = '300px';
@@ -78,9 +82,6 @@ dropdownButton.addEventListener('click', function() {
 });
 
 var dropdownToggle = document.querySelector('.dropdown-toggle');
-var dropdownMenuMobile2 = document.querySelector('.dropdown-menu-mobile-2');
-var dropdownMobile = document.querySelector('.dropdown-mobile');
-var dropdownIcon2 = dropdownToggle.querySelector('i');
 
 dropdownToggle.addEventListener('click', function(e) {
     e.preventDefault();
