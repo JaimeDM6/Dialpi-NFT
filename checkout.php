@@ -241,13 +241,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         if (isset($_SESSION['cart'])) {
                         ?>
                             <div class="metodo-pago">
-                                <form class="tarjeta-credito">
+                                <form class="tarjeta-credito" action="/procesar-pago" method="post" >
                                     <h3 class="title">Método de pago</h3>
-                                    <input type="text" class="titular-tarjeta" placeholder="Titular de la tarjeta" autocomplete="cc-name">
-                                    <input type="text" class="numero-tarjeta" placeholder="Número de tarjeta" autocomplete="cc-number">
+                                    <input type="text" class="titular-tarjeta" placeholder="Titular de la tarjeta" autocomplete="cc-name" required>
+                                    <input type="text" class="numero-tarjeta" placeholder="Número de tarjeta" autocomplete="cc-number" maxlength="19" required>
                                     <div class="fecha-cvv">
                                         <div class="mes-tarjeta">
-                                            <select name="Mes" autocomplete="cc-exp-month">
+                                            <select name="Mes" autocomplete="cc-exp-month" required>
                                                 <option value="enero">Enero</option>
                                                 <option value="febrero">Febrero</option>
                                                 <option value="marzo">Marzo</option>
@@ -263,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             </select>
                                         </div>
                                         <div class="year-tarjeta">
-                                            <select name="Year" autocomplete="cc-exp-year">
+                                            <select name="Year" autocomplete="cc-exp-year" required>
                                                 <option value="2024">2024</option>
                                                 <option value="2025">2025</option>
                                                 <option value="2026">2026</option>
@@ -284,14 +284,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             </select>
                                         </div>
                                         <div class="cvv">
-                                            <input type="text" placeholder="CVV" autocomplete="cc-csc">
+                                            <input type="text" class="cvv-input" placeholder="CVV" autocomplete="cc-csc" maxlength="3" required>
                                         </div>
                                     </div>
                                     <div class="metodo-pago-botones">
-                                        <button type="submit" class="boton-proceder"><a href="/procesar-pago">Proceder con el pago</a></button>
-                                        <button type="submit" class="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                        <button type="submit" class="boton-proceder">Pagar con tarjeta</button>
                                     </div>
                                 </form>
+                                <div class="metodo-pago-botones">
+                                    <button class="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                </div>
                     
                                 <?php
                                 if (isset($_SESSION['usuario']['tarjetas'])) {
@@ -399,6 +401,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var numeroTarjeta = document.querySelector('.numero-tarjeta');
+            var cvv = document.querySelector('.cvv-input');
+        
+            cvv.addEventListener('input', function() {
+                var valor = this.value.replace(/\D/g, '');
+        
+                this.value = valor;
+            });
+        
+            numeroTarjeta.addEventListener('input', updateCardInfo);
+        
+            function updateCardInfo() {
+                var cardNumber = this.value.replace(/\D/g, '');
+                var cardType = getCardType(cardNumber);
+        
+                switch (cardType) {
+                    case 'amex':
+                        cardNumber = cardNumber.replace(/(\d{4})(\d{6})(\d{5})/, '$1 $2 $3');
+                        cvv.setAttribute('maxlength', '4');
+                        break;
+                    case 'visa':
+                    case 'mastercard':
+                    case 'discover':
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    case 'diners':
+                        cardNumber = cardNumber.replace(/(\d{4})(\d{4})(\d{4})(\d{2})/, '$1 $2 $3 $4');
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    case 'jcb':
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    default:
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                }
+        
+                this.value = cardNumber;
+        
+                if (cardType) {
+                    this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
+                    this.style.backgroundRepeat = 'no-repeat';
+                    this.style.backgroundPosition = 'right 10px center';
+                    this.style.backgroundSize = 'auto 20px';
+                } else {
+                    this.style.backgroundImage = '';
+                }
+            }
+        
+            function getCardType(cardNumber) {
+                var cardTypes = {
+                    amex: [/^3[47][0-9]{13}$/],
+                    visa: [/^4[0-9]{12}(?:[0-9]{3})?$/],
+                    mastercard: [/^5[1-5][0-9]{14}$/, /^2[2-7][0-9]{14}$/],
+                    discover: [/^6011[0-9]{12}[0-9]*$/, /^62[24568][0-9]{13}[0-9]*$/, /^6[45][0-9]{14}[0-9]*$/],
+                    diners: [/^3[0689][0-9]{12}[0-9]*$/],
+                    jcb: [/^35[0-9]{14}[0-9]*$/]
+                };
+        
+                for (var type in cardTypes) {
+                    var regexes = cardTypes[type];
+                    for (var i = 0; i < regexes.length; i++) {
+                        if (regexes[i].test(cardNumber.replace(/\s/g, ''))) {
+                            return type;
+                        }
+                    }
+                }
+        
+                return null;
+            }
         });
     </script>
     <script src="script/intlTelInputWithUtils.js"></script>
