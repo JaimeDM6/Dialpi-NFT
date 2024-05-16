@@ -853,6 +853,109 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     background-color: #2ba3b9;
 }
 
+.metodo-pago {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.metodo-pago h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tarjeta-credito {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+.numero-tarjeta, .titular-tarjeta, .cvv input, .mes-tarjeta select, .boton-paypal, .boton-proceder, .year-tarjeta select {
+    height: 42px;
+}
+  
+.numero-tarjeta, .titular-tarjeta, .mes-tarjeta select, .year-tarjeta select {
+    font-size: 0.8em;
+    font-weight: 100;
+    line-height: 14px;
+}
+
+.numero-tarjeta, .titular-tarjeta {
+    width: 90%;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    border: 2px solid #e1e8ee;
+    border-radius: 6px;
+}
+
+.fecha-cvv {
+    display: flex;
+    flex-direction: row;
+}
+
+.mes-tarjeta select, .year-tarjeta select, .cvv input {
+    width: 145px;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    border: 2px solid #e1e8ee;
+    border-radius: 6px;
+    background-position: 85% 50%;
+}
+
+.mes-tarjeta select, .year-tarjeta select {
+    margin-right: 52px;
+}
+
+.mes-tarjeta option, .year-tarjeta option {
+    color: #000000;
+}
+
+.metodo-pago-botones {
+    text-align: center;
+}
+  
+.boton-paypal, .boton-proceder {
+    cursor: pointer;
+    width: 200px;
+    border-color: transparent;
+    border-radius: 6px;
+    font-size: 1em;
+    font-family: 'Amaranth';
+}
+  
+.boton-proceder {
+    margin-bottom: 10px;
+    background: #7dc855;
+    cursor: pointer;
+    color : #ffffff;
+    transition: background 0.3s;
+}
+  
+.boton-paypal a {
+    text-decoration: none;
+}
+  
+.boton-paypal a {
+    color : #ffffff;
+}
+  
+.boton-paypal {
+    padding-right: 80px;
+    background: url('../img/paypal.svg') no-repeat 82% 56% #113984;
+    transition: background 0.3s;
+}
+
+.boton-proceder:hover {
+    background: #5ca634;
+}
+
+.boton-paypal:hover {
+    background: url('../img/paypal.svg') no-repeat 82% 56% #0d2b6b;
+}
+
 /* Estilos del pie de página */
 footer {
     background-color: #222744;

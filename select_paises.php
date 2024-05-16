@@ -1,6 +1,6 @@
 <select name="pais" id="pais">
     <?php
-    if (isset($_SESSION['id_usuario'])) {
+    if (isset($_SESSION['usuario'])) {
     ?>
         <option value="<?= $direccion['pais_usuario'] ?>" selected><?= $direccion['pais_usuario'] ?></option>
     <?php

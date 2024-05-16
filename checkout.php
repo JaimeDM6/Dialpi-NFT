@@ -4,7 +4,6 @@ require_once 'conexion.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
     $_SESSION['invitado'] = [
         'nombre' => $_POST['nombre'],
@@ -15,27 +14,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
     header('Location: /checkout?direccion');
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion'])) {
-    $idUsuario = $_SESSION['id_usuario'];
-
-    $query = "UPDATE Usuarios SET direccion_usuario = NULL, cp_usuario = NULL, poblacion_usuario = NULL, pais_usuario = NULL WHERE id_usuario = ?";
+    $idUsuario = $_SESSION['usuario']['id'];
+    $query = "UPDATE Usuarios SET direccion_usuario = NULL, cp_usuario = NULL, poblacion_usuario = NULL, estado_provincia = NULL, pais_usuario = NULL WHERE id_usuario = ?";
     $stmt = $conexion->prepare($query);
     $stmt->bind_param('i', $idUsuario);
     $stmt->execute();
-
     echo json_encode(['success' => $stmt->affected_rows > 0]);
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvitado'])) {
     $_SESSION['invitado'] = [
         'direccion' => '',
         'cp' => '',
         'poblacion' => '',
+        'estado' => '',
         'pais' => '',
     ];
-
     echo json_encode(['success' => true]);
     exit;
 }
@@ -61,11 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
             <h2>Checkout</h2>
             <?php
                 $parametro = array_key_first($_GET);
-
                 if (!isset($_SESSION['cart'])) {
                     echo "No hay pedidos en el carrito.";
                 }
-
                 switch ($parametro) {
                     case 'invitado':
                         if (isset($_SESSION['cart'])) {
@@ -88,10 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         break;
                     case 'direccion':
                         if (isset($_SESSION['cart'])) {
-                            if (isset($_SESSION['nombre_usuario'])) {
-                                $idUsuario = $_SESSION['id_usuario'];
+                            if (isset($_SESSION['usuario'])) {
+                                $idUsuario = $_SESSION['usuario']['id'];
                             
-                                $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, pais_usuario FROM Usuarios WHERE id_usuario = ?";
+                                $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, estado_provincia, pais_usuario FROM Usuarios WHERE id_usuario = ?";
                                 $stmt = $conexion->prepare($query);
                                 $stmt->bind_param('i', $idUsuario);
                                 $stmt->execute();
@@ -101,10 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                 if ($direccion['direccion_usuario'] !== null) {
                                 ?>
                                     <div class="direccion">
-                                        <h3>Dirección postal</h3>
+                                        <h3>Dirección de facturación</h3>
                                         <p>Dirección: <?= $direccion['direccion_usuario'] ?></p>
                                         <p>Código Postal: <?= $direccion['cp_usuario'] ?></p>
                                         <p>Población: <?= $direccion['poblacion_usuario'] ?></p>
+                                        <p>Estado/Provincia: <?= $direccion['estado_provincia'] ?></p>
                                         <p>País: <?= $direccion['pais_usuario'] ?></p><br>
                                         <div class="botones-centrados">
                                             <button onclick="location.href='/checkout?direccion-edit'">Editar</button>
@@ -126,22 +120,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                 <?php
                                 }
                             } else {
-                                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['invitado'])) {
+                                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     $_SESSION['invitado'] = [
-                                        'direccion' => $_POST['direccion'],
-                                        'cp' => $_POST['cp'],
-                                        'poblacion' => $_POST['poblacion'],
-                                        'pais' => $_POST['pais'],
+                                        'direccion' => isset($_POST['direccion']) ? $_POST['direccion'] : '',
+                                        'cp' => isset($_POST['cp']) ? $_POST['cp'] : '',
+                                        'poblacion' => isset($_POST['poblacion']) ? $_POST['poblacion'] : '',
+                                        'estado' => isset($_POST['estado']) ? $_POST['estado'] : '',
+                                        'pais' => isset($_POST['pais']) ? $_POST['pais'] : '',
                                     ];
                                 }
 
                                 if (isset($_SESSION['invitado']['direccion']) && $_SESSION['invitado']['direccion'] !== '') {
                                 ?>
                                     <div class="direccion">
-                                        <h3>Dirección postal</h3>
+                                        <h3>Dirección de facturación</h3>
                                         <p>Dirección: <?= $_SESSION['invitado']['direccion'] ?></p>
                                         <p>Código Postal: <?= $_SESSION['invitado']['cp'] ?></p>
                                         <p>Población: <?= $_SESSION['invitado']['poblacion'] ?></p>
+                                        <p>Estado/Provincia: <?= $_SESSION['invitado']['estado'] ?></p>
                                         <p>País: <?= $_SESSION['invitado']['pais'] ?></p><br>
                                         <div class="botones-centrados">
                                             <button onclick="location.href='/checkout?direccion-edit'">Editar</button>
@@ -171,14 +167,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                 $direccion = $_POST['direccion'];
                                 $cp = $_POST['cp'];
                                 $poblacion = $_POST['poblacion'];
+                                $estado = $_POST['estado'];
                                 $pais = $_POST['pais'];
-                            
-                                $query = "UPDATE Usuarios SET direccion_usuario = ?, cp_usuario = ?, poblacion_usuario = ?, pais_usuario = ? WHERE id_usuario = ?";
-                            
+
+                                $query = "UPDATE Usuarios SET direccion_usuario = ?, cp_usuario = ?, poblacion_usuario = ?, estado_provincia = ?, pais_usuario = ? WHERE id_usuario = ?";
+
                                 $stmt = $conexion->prepare($query);
-                                $stmt->bind_param('ssssi', $direccion, $cp, $poblacion, $pais, $_SESSION['id_usuario']);
+                                $stmt->bind_param('sssssi', $direccion, $cp, $poblacion, $estado, $pais, $_SESSION['usuario']['id']);
                                 $stmt->execute();
-                            
+
                                 if ($stmt->affected_rows > 0) {
                                     echo "Dirección actualizada con éxito.";
                                     header('Location: /checkout?direccion');
@@ -187,10 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                 }
                             }
 
-                            if (isset($_SESSION['nombre_usuario'])) {
-                                $idUsuario = $_SESSION['id_usuario'];
-                        
-                                $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, pais_usuario FROM Usuarios WHERE id_usuario = ?";
+                            if (isset($_SESSION['usuario'])) {
+                                $idUsuario = $_SESSION['usuario']['id'];
+
+                                $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, estado_provincia, pais_usuario FROM Usuarios WHERE id_usuario = ?";
                                 $stmt = $conexion->prepare($query);
                                 $stmt->bind_param('i', $idUsuario);
                                 $stmt->execute();
@@ -198,32 +195,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                 $direccion = $result->fetch_assoc();
                             ?>
                                 <form action="checkout?direccion-edit" method="post" class="direccion-form">
-                                    <h3>Dirección postal</h3>
+                                    <h3>Dirección de facturación</h3>
                                     <label for="direccion">Dirección:</label>
                                     <input type="text" id="direccion" name="direccion" value="<?= $direccion['direccion_usuario'] ?>">
                                     <label for="cp">Código Postal:</label>
                                     <input type="text" id="cp" name="cp" value="<?= $direccion['cp_usuario'] ?>">
                                     <label for="poblacion">Población:</label>
                                     <input type="text" id="poblacion" name="poblacion" value="<?= $direccion['poblacion_usuario'] ?>">
-                                    <label for="pais">País:</label>
-                                    <?php include 'select_paises.php'; ?>
-                                    <br>
-                                    <div class="direccion-button">
-                                        <input type="submit" value="Guardar">
-                                        <a href="/checkout?direccion" class="cancel-button">Cancelar</a>
-                                    </div>
-                                </form>
-                            <?php
-                            } else if (isset($_SESSION['invitado']['direccion']) && $_SESSION['invitado']['direccion'] !== '') {
-                            ?>
-                                <form action="checkout?direccion" method="post" class="direccion-form">
-                                    <h3>Dirección postal</h3>
-                                    <label for="direccion">Dirección:</label>
-                                    <input type="text" id="direccion" name="direccion" value="<?= $_SESSION['invitado']['direccion'] ?>">
-                                    <label for="cp">Código Postal:</label>
-                                    <input type="text" id="cp" name="cp" value="<?= $_SESSION['invitado']['cp'] ?>">
-                                    <label for="poblacion">Población:</label>
-                                    <input type="text" id="poblacion" name="poblacion" value="<?= $_SESSION['invitado']['poblacion'] ?>">
+                                    <label for="estado">Estado/Provincia:</label>
+                                    <input type="text" id="estado" name="estado" value="<?= $direccion['estado_provincia'] ?>">
                                     <label for="pais">País:</label>
                                     <?php include 'select_paises.php'; ?>
                                     <br>
@@ -236,13 +216,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                             } else {
                             ?>
                                 <form action="checkout?direccion" method="post" class="direccion-form">
-                                    <h3>Dirección postal</h3>
+                                    <h3>Dirección de facturación</h3>
                                     <label for="direccion">Dirección:</label>
-                                    <input type="text" id="direccion" name="direccion">
+                                    <input type="text" id="direccion" name="direccion" value="<?= isset($_SESSION['invitado']['direccion']) ? $_SESSION['invitado']['direccion'] : '' ?>">
                                     <label for="cp">Código Postal:</label>
-                                    <input type="text" id="cp" name="cp">
+                                    <input type="text" id="cp" name="cp" value="<?= isset($_SESSION['invitado']['cp']) ? $_SESSION['invitado']['cp'] : '' ?>">
                                     <label for="poblacion">Población:</label>
-                                    <input type="text" id="poblacion" name="poblacion">
+                                    <input type="text" id="poblacion" name="poblacion" value="<?= isset($_SESSION['invitado']['poblacion']) ? $_SESSION['invitado']['poblacion'] : '' ?>">
+                                    <label for="estado">Estado/Provincia:</label>
+                                    <input type="text" id="estado" name="estado" value="<?= isset($_SESSION['invitado']['estado']) ? $_SESSION['invitado']['estado'] : '' ?>">
                                     <label for="pais">País:</label>
                                     <?php include 'select_paises.php'; ?>
                                     <br>
@@ -259,6 +241,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         if (isset($_SESSION['cart'])) {
                         ?>
                             <div class="metodo-pago">
+                                <form class="tarjeta-credito" action="/procesar-pago" method="post" >
+                                    <h3 class="title">Método de pago</h3>
+                                    <input type="text" class="titular-tarjeta" placeholder="Titular de la tarjeta" autocomplete="cc-name" required>
+                                    <input type="text" class="numero-tarjeta" placeholder="Número de tarjeta" autocomplete="cc-number" maxlength="19" required>
+                                    <div class="fecha-cvv">
+                                        <div class="mes-tarjeta">
+                                            <select name="Mes" autocomplete="cc-exp-month" required>
+                                                <option value="enero">Enero</option>
+                                                <option value="febrero">Febrero</option>
+                                                <option value="marzo">Marzo</option>
+                                                <option value="abril">Abril</option>
+                                                <option value="mayo">Mayo</option>
+                                                <option value="junio">Junio</option>
+                                                <option value="julio">Julio</option>
+                                                <option value="agosto">Agosto</option>
+                                                <option value="septiembre">Septiembre</option>
+                                                <option value="octubre">Octubre</option>
+                                                <option value="noviembre">Noviembre</option>
+                                                <option value="diciembre">Diciembre</option>
+                                            </select>
+                                        </div>
+                                        <div class="year-tarjeta">
+                                            <select name="Year" autocomplete="cc-exp-year" required>
+                                                <option value="2024">2024</option>
+                                                <option value="2025">2025</option>
+                                                <option value="2026">2026</option>
+                                                <option value="2027">2027</option>
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
+                                                <option value="2030">2030</option>
+                                                <option value="2031">2031</option>
+                                                <option value="2032">2032</option>
+                                                <option value="2033">2033</option>
+                                                <option value="2034">2034</option>
+                                                <option value="2035">2035</option>
+                                                <option value="2036">2036</option>
+                                                <option value="2037">2037</option>
+                                                <option value="2038">2038</option>
+                                                <option value="2039">2039</option>
+                                                <option value="2040">2040</option>
+                                            </select>
+                                        </div>
+                                        <div class="cvv">
+                                            <input type="text" class="cvv-input" placeholder="CVV" autocomplete="cc-csc" maxlength="3" required>
+                                        </div>
+                                    </div>
+                                    <div class="metodo-pago-botones">
+                                        <button type="submit" class="boton-proceder">Pagar con tarjeta</button>
+                                    </div>
+                                </form>
+                                <div class="metodo-pago-botones">
+                                    <button class="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                </div>
+                    
+                                <?php
+                                if (isset($_SESSION['usuario']['tarjetas'])) {
+                                    foreach ($_SESSION['usuario']['tarjetas'] as $tarjeta) {
+                                        echo "<p>Tarjeta terminada en ****" . substr($tarjeta['numero'], -4) . "</p>";
+                                    }
+                                }
+                                ?>
                             </div>
                         <?php
                         }
@@ -273,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         break;
                     default:
                         if (isset($_SESSION['cart'])) {
-                            if (isset($_SESSION['nombre_usuario'])) {
+                            if (isset($_SESSION['usuario'])) {
                                 header('Location: /checkout?direccion');
                                 exit;
                             } else {
@@ -292,7 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             <input type="submit" value="Iniciar sesión">
                                         </form>
                                     </div>
-
                                     <div class="cuenta-der">
                                         <a href="/checkout?invitado" class="login-button">Continuar como invitado</a>
                                     </div>
@@ -311,7 +353,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
         $(document).ready(function(){
             $('.login-form').on('submit', function(e) {
                 e.preventDefault();
-
                 $.ajax({
                     url: '/login',
                     method: 'POST',
@@ -320,13 +361,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     success: function(response) {
                         if (response.error) {
                             $('#error-message').text(response.message);
-                        } else {
+                        } else if (response.message === 'success') {
                             window.location.href = '/checkout?direccion';
                         }
                     }
                 });
             });
-
             $('#eliminar-direccion').on('click', function(e) {
                 e.preventDefault();
             
@@ -344,7 +384,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
-
             $('#eliminar-direccion-invitado').on('click', function(e) {
                 e.preventDefault();
             
@@ -362,6 +401,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var numeroTarjeta = document.querySelector('.numero-tarjeta');
+            var cvv = document.querySelector('.cvv-input');
+        
+            cvv.addEventListener('input', function() {
+                var valor = this.value.replace(/\D/g, '');
+        
+                this.value = valor;
+            });
+        
+            numeroTarjeta.addEventListener('input', updateCardInfo);
+        
+            function updateCardInfo() {
+                var cardNumber = this.value.replace(/\D/g, '');
+                var cardType = getCardType(cardNumber);
+        
+                switch (cardType) {
+                    case 'amex':
+                        cardNumber = cardNumber.replace(/(\d{4})(\d{6})(\d{5})/, '$1 $2 $3');
+                        cvv.setAttribute('maxlength', '4');
+                        break;
+                    case 'visa':
+                    case 'mastercard':
+                    case 'discover':
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    case 'diners':
+                        cardNumber = cardNumber.replace(/(\d{4})(\d{4})(\d{4})(\d{2})/, '$1 $2 $3 $4');
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    case 'jcb':
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    default:
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                }
+        
+                this.value = cardNumber;
+        
+                if (cardType) {
+                    this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
+                    this.style.backgroundRepeat = 'no-repeat';
+                    this.style.backgroundPosition = 'right 10px center';
+                    this.style.backgroundSize = 'auto 20px';
+                } else {
+                    this.style.backgroundImage = '';
+                }
+            }
+        
+            function getCardType(cardNumber) {
+                var cardTypes = {
+                    amex: [/^3[47][0-9]{13}$/],
+                    visa: [/^4[0-9]{12}(?:[0-9]{3})?$/],
+                    mastercard: [/^5[1-5][0-9]{14}$/, /^2[2-7][0-9]{14}$/],
+                    discover: [/^6011[0-9]{12}[0-9]*$/, /^62[24568][0-9]{13}[0-9]*$/, /^6[45][0-9]{14}[0-9]*$/],
+                    diners: [/^3[0689][0-9]{12}[0-9]*$/],
+                    jcb: [/^35[0-9]{14}[0-9]*$/]
+                };
+        
+                for (var type in cardTypes) {
+                    var regexes = cardTypes[type];
+                    for (var i = 0; i < regexes.length; i++) {
+                        if (regexes[i].test(cardNumber.replace(/\s/g, ''))) {
+                            return type;
+                        }
+                    }
+                }
+        
+                return null;
+            }
         });
     </script>
     <script src="script/intlTelInputWithUtils.js"></script>
