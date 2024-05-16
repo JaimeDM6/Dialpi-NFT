@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if (isset($_SESSION['nombre_usuario'])) {
+    if (isset($_SESSION['usuario'])) {
         header('Location: /');
         exit;
     }
@@ -23,10 +23,13 @@
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['password_usuario'])) {
-                $_SESSION['nombre_usuario'] = $user['nombre_usuario'];
-                $_SESSION['apellidos_usuario'] = $user['apellidos_usuario'];
-                $_SESSION['id_usuario'] = $user['id_usuario'];
-                $_SESSION['ruta_perfil'] = $user['ruta_perfil'];
+                $_SESSION['usuario'] = [
+                    'nombre' => $user['nombre_usuario'],
+                    'apellidos' => $user['apellidos_usuario'],
+                    'id' => $user['id_usuario'],
+                    'ruta_perfil' => $user['ruta_perfil'],
+                ];
+                unset($_SESSION['invitado']);
                 $response['message'] = 'success';
             }
             else if (hash('sha512', $password) === $user['password_usuario']) {
@@ -36,10 +39,13 @@
                 $stmt->bind_param("ss", $new_hashed_password, $email);
                 $stmt->execute();
 
-                $_SESSION['nombre_usuario'] = $user['nombre_usuario'];
-                $_SESSION['apellidos_usuario'] = $user['apellidos_usuario'];
-                $_SESSION['id_usuario'] = $user['id_usuario'];
-                $_SESSION['ruta_perfil'] = $user['ruta_perfil'];
+                $_SESSION['usuario'] = [
+                    'nombre' => $user['nombre_usuario'],
+                    'apellidos' => $user['apellidos_usuario'],
+                    'id' => $user['id_usuario'],
+                    'ruta_perfil' => $user['ruta_perfil'],
+                ];
+                unset($_SESSION['invitado']);
                 $response['message'] = 'success';
             } else {
                 $password = "";
@@ -90,32 +96,17 @@
                     if (response.error) {
                         $('#error-message').text(response.message);
                         $('html, body').animate({ scrollTop: 0 }, 'fast');
-                    } else {
+                    } else if (response.message === 'success') {
                         window.location.href = '/';
                     }
                 }
             });
-
-            $.ajax({
-                url: '/checkout',
-                method: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function(response) {
-                    if (response.error) {
-                        $('#error-message').text(response.message);
-                        $('html, body').animate({ scrollTop: 0 }, 'fast');
-                    } else {
-                        window.location.href = '/checkout?direccion';
-                    }
-                }
-            });
         });
-
+    
         $('#toggle-password').click(function() {
             let passwordInput = $('#password');
             let passwordType = passwordInput.attr('type');
-
+    
             if (passwordType === 'password') {
                 passwordInput.attr('type', 'text');
                 $(this).removeClass('fa-eye').addClass('fa-eye-slash');

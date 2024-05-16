@@ -145,6 +145,8 @@ nav ul li a:hover {
 
 .login {
     width: 15%;
+    display: flex;
+    justify-content: center;
 }
 
 .login-button {
@@ -688,12 +690,18 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     margin-bottom: 10px;
 }
 
+.botones-centrados {
+    display: flex;
+    justify-content: center;
+}
+
 .direccion button {
     background-color: #2F4C5C;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 7px;
+    margin: 0 10px;
     cursor: pointer;
     font-family: 'Amaranth';
     transition: background-color 0.3s ease;
@@ -703,6 +711,103 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 
 .direccion button:hover {
     background-color: #2ba3b9;
+}
+
+.boton-derecha {
+    text-align: right;
+}
+
+.siguiente {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    font-family: 'Amaranth';
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.siguiente:hover {
+    background-color: darkorange;
+}
+
+.direccion-form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    width: 50%;
+    margin: 0 auto;
+}
+
+.direccion-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #222744;
+}
+
+.direccion-form input[type="text"], .direccion-form select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.direccion-form input[type="submit"] {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-family: 'Amaranth';
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.direccion-form input[type="submit"]:hover {
+    background-color: #2ba3b9;
+}
+
+.direccion-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.direccion-form input[type="submit"],
+.direccion-form a {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.direccion-form a {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1em;
+    font-family: 'Amaranth';
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.direccion-form a:hover {
+    background-color: darkorange;
 }
 
 .invitado-form {
@@ -748,6 +853,111 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     background-color: #2ba3b9;
 }
 
+.tarjeta-credito {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.metodo-pago {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.metodo-pago h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.numero-tarjeta, .titular-tarjeta, .cvv input, .mes-tarjeta select, .boton-paypal, .boton-proceder, .year-tarjeta select {
+    height: 42px;
+}
+  
+.numero-tarjeta, .titular-tarjeta, .mes-tarjeta select, .year-tarjeta select {
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 14px;
+}
+
+.numero-tarjeta, .titular-tarjeta {
+    width: 90%;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    border: 2px solid #e1e8ee;
+    border-radius: 6px;
+}
+
+.fecha-cvv {
+    display: flex;
+    flex-direction: row;
+}
+
+.mes-tarjeta select, .year-tarjeta select, .cvv input {
+    width: 145px;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    border: 2px solid #e1e8ee;
+    border-radius: 6px;
+    background-position: 85% 50%;
+}
+
+.mes-tarjeta select, .year-tarjeta select {
+    margin-right: 52px;
+}
+
+.mes-tarjeta option, .year-tarjeta option {
+    color: #000000;
+}
+
+.metodo-pago-botones {
+    text-align: center;
+}
+  
+.boton-paypal, .boton-proceder {
+    cursor: pointer;
+    width: 70%;
+    border-color: transparent;
+    border-radius: 6px;
+    font-size: 16px;
+}
+  
+.boton-proceder {
+    margin-bottom: 10px;
+    background: #7dc855;
+    transition: background 0.3s;
+}
+  
+.boton-paypal a, .boton-proceder a {
+    text-decoration: none;
+    cursor: pointer;
+}
+  
+.boton-proceder a {
+    color : #ffffff;
+}
+  
+.boton-paypal a {
+    color : #ffffff;
+}
+  
+.boton-paypal {
+    padding-right: 110px;
+    background: url('../img/paypal.svg') no-repeat 65% 56% #113984;
+    transition: background 0.3s;
+}
+
+.boton-proceder:hover {
+    background: #5ca634;
+}
+
+.boton-paypal:hover {
+    background: url('../img/paypal.svg') no-repeat 65% 56% #0d2b6b;
+}
+
 /* Estilos del pie de página */
 footer {
     background-color: #222744;
@@ -765,61 +975,80 @@ footer p {
 
 /* Estilos pagina cuenta*/
 
-.perfil-container-left {
-    width: 50%;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.perfil-section {
-    margin-bottom: 20px;
-}
-
-.perfil-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
 .perfil-input {
-    width: calc(100% - 40px);
-    padding: 8px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.perfil-input[readonly] {
+    background-color: #f9f9f9;
+}
+
+.perfil-input.editable {
+    border: 1px solid #007BFF;
+    background-color: #e7f3ff;
 }
 
 .perfil-edit-button {
-    display: block;
-    width: auto;
-    padding: 6px 12px;
-    background-color: #4CAF50;
+    background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 10px 15px;
     cursor: pointer;
-    float: right;
+    transition: background-color 0.3s;
+}
+
+.perfil-edit-button:hover {
+    background-color: #0056b3;
 }
 
 .perfil-save-button {
-    display: block;
-    width: 100px;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 10px 15px;
     cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.perfil-save-button:hover {
+    background-color: #218838;
+}
+
+.perfil-section.edit-mode {
+    border: 1px solid #007BFF;
+    padding: 15px;
+    background-color: #e7f3ff;
+}
+
+.perfil-container-left {
+    width: 50%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.perfil-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.perfil-label {
+    margin-top: 10px;
 }
 
 .perfil-checkbox {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
-legend {
-    font-weight: bold;
-    margin-bottom: 10px;
+fieldset {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 /* Animaciones */

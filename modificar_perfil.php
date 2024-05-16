@@ -2,7 +2,7 @@
 session_start();
 require_once 'conexion.php';
 
-if (!isset($_SESSION['id_usuario'])) {
+if (!isset($_SESSION['usuario'])) {
     header("Location: /login");
     exit;
 }
@@ -16,7 +16,7 @@ include 'header.php';
 
         <?php
 
-        $id_usuario = $_SESSION['id_usuario'];
+        $id_usuario = $_SESSION['usuario']['id'];
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             

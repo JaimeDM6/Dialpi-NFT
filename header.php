@@ -18,13 +18,13 @@
         <button type="button" class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></button>
         <div class="login">
             <?php
-                if (isset($_SESSION['nombre_usuario'])) {
+                if (isset($_SESSION['usuario'])) {
             ?>
                 <nav class="dropdown user-info">
                     <?php
-                        $ruta_perfil = isset($_SESSION['ruta_perfil']) && $_SESSION['ruta_perfil'] != '' ? $_SESSION['ruta_perfil'] : '/img/perfil.png';
+                        $ruta_perfil = isset($_SESSION['usuario']['ruta_perfil']) && $_SESSION['usuario']['ruta_perfil'] != '' ? $_SESSION['usuario']['ruta_perfil'] : '/img/perfil.png';
                         echo '<img class="profile-pic" src="' . $ruta_perfil . '" alt="Foto de perfil">';
-                        echo '<a class="user-name">' . $_SESSION['nombre_usuario'] . ' ' . $_SESSION['apellidos_usuario'] . '&nbsp;&nbsp;<i class="fas fa-chevron-down"></i></a>';
+                        echo '<a class="user-name">' . $_SESSION['usuario']['nombre'] . ' ' . $_SESSION['usuario']['apellidos'] . '&nbsp;&nbsp;<i class="fas fa-chevron-down"></i></a>';
                     ?>
                     <ul class="dropdown-menu">
                         <li><a href="/cuenta" id="perfil">Cuenta</a></li>
@@ -66,7 +66,7 @@
                 <a href="#"><li>Comprar NFT</li></a>
                 <a href="#"><li>Vender NFT</li></a>
                 <a href="#"><li>Buscar</li></a>
-                <?php if(isset($_SESSION['nombre_usuario'])): ?>
+                <?php if(isset($_SESSION['usuario'])): ?>
                     <li class="dropdown-mobile">
                         <a class="dropdown-toggle">Mi Perfil&nbsp;&nbsp;<i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu-mobile-2">

@@ -1,5 +1,5 @@
 <?php
     session_start();
-    session_unset();
-    session_destroy();
+    unset($_SESSION['usuario']);
+    unset($_SESSION['invitado']);
     header("Location: /");
