@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mes = $_POST["Mes"];
     $year = $_POST["Year"];
@@ -28,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 include 'head.php';
-    include 'header.php';
+    include 'header-center.php';
     ?>
     <main>
         <div class="container">
