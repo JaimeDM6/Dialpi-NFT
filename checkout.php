@@ -241,13 +241,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         if (isset($_SESSION['cart'])) {
                         ?>
                             <div class="metodo-pago">
-                                <form class="tarjeta-credito">
+                                <form class="tarjeta-credito" action="/procesar-pago" method="post" >
                                     <h3 class="title">Método de pago</h3>
-                                    <input type="text" class="titular-tarjeta" placeholder="Titular de la tarjeta" autocomplete="cc-name">
-                                    <input type="text" class="numero-tarjeta" placeholder="Número de tarjeta" autocomplete="cc-number">
+                                    <input type="text" class="titular-tarjeta" placeholder="Titular de la tarjeta" autocomplete="cc-name" required>
+                                    <input type="text" class="numero-tarjeta" placeholder="Número de tarjeta" autocomplete="cc-number" maxlength="19" required>
                                     <div class="fecha-cvv">
                                         <div class="mes-tarjeta">
-                                            <select name="Mes" autocomplete="cc-exp-month">
+                                            <select name="Mes" autocomplete="cc-exp-month" required>
                                                 <option value="enero">Enero</option>
                                                 <option value="febrero">Febrero</option>
                                                 <option value="marzo">Marzo</option>
@@ -263,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             </select>
                                         </div>
                                         <div class="year-tarjeta">
-                                            <select name="Year" autocomplete="cc-exp-year">
+                                            <select name="Year" autocomplete="cc-exp-year" required>
                                                 <option value="2024">2024</option>
                                                 <option value="2025">2025</option>
                                                 <option value="2026">2026</option>
@@ -284,14 +284,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             </select>
                                         </div>
                                         <div class="cvv">
-                                            <input type="text" placeholder="CVV" autocomplete="cc-csc">
+                                            <input type="text" class="cvv-input" placeholder="CVV" autocomplete="cc-csc" maxlength="3" required>
                                         </div>
                                     </div>
                                     <div class="metodo-pago-botones">
-                                        <button type="submit" class="boton-proceder"><a href="/procesar-pago">Proceder con el pago</a></button>
-                                        <button type="submit" class="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                        <button type="submit" class="boton-proceder">Pagar con tarjeta</button>
                                     </div>
                                 </form>
+                                <div class="metodo-pago-botones">
+                                    <button class="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                </div>
                     
                                 <?php
                                 if (isset($_SESSION['usuario']['tarjetas'])) {
@@ -398,6 +400,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         }
                     }
                 });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var numeroTarjeta = document.querySelector('.numero-tarjeta');
+            var cvv = document.querySelector('.cvv-input');
+
+            cvv.addEventListener('input', function() {
+                var valor = this.value.replace(/\D/g, '');
+
+                this.value = valor;
+            });
+
+            numeroTarjeta.addEventListener('input', function() {
+                var valor = this.value.replace(/\D/g, '');
+            
+                valor = valor.replace(/(\d{4})/g, '$1 ').trim();
+            
+                this.value = valor;
+            
+                var cardNumber = this.value;
+            
+                var cardType = getCardType(cardNumber);
+            
+                if (cardType) {
+                    this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
+                    this.style.backgroundRepeat = 'no-repeat';
+                    this.style.backgroundPosition = 'right 10px center';
+                    this.style.backgroundSize = 'auto 20px';
+                } else {
+                    this.style.backgroundImage = '';
+                }
+            
+                function getCardType(cardNumber) {
+                    var cardTypes = {
+                        amex: /^3[47][0-9]{13}$/,
+                        visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
+                        mastercard: /^5[1-5][0-9]{14}$|^2[2-7][0-9]{14}$/,
+                        discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
+                        diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
+                        jcb: /^(?:2131|1800|35\d{3})\d{11}$/
+                    };
+
+                    for (var type in cardTypes) {
+                        var regex = cardTypes[type];
+                        if (regex.test(cardNumber.replace(/\s/g, ''))) {
+                            return type;
+                        }
+                    }
+
+                    return null;
+                }
             });
         });
     </script>
