@@ -26,18 +26,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($fechaVencimiento < $fechaActual) {
         echo "La tarjeta ha caducado";
     } else {
-        echo "Pago realizado con éxito";
+        $_SESSION['pago_realizado'] = true;
     }
 }
+
 include 'head.php';
+
+if (isset($_SESSION['pago_realizado'])) {
+    echo "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;'>";
+    echo "<h1>Procesando pago...</h1>";
+    echo "<img src='img/procesando.gif' alt='Procesando...' height=100>";
+    echo "</div>";
+
+    echo "<script>
+        setTimeout(function() {
+            location.href = '/procesar-pago?confirmar';
+        }, 5000);
+    </script>";
+    unset($_SESSION['pago_realizado']);
+}
+
+if (isset($_GET['confirmar'])) {
     include 'header-center.php';
     ?>
     <main>
         <div class="container">
-            <h2>Procesar pago</h2>
+            <h2>El pago se ha realizado correctamente.</h2>
+            <a href="/certificado?id=21498">Pulse aquí para descargar su certificado.</a>
         </div>
     </main>
     <?php include 'footer.php'; ?>
     <script src="script/script.js"></script>
 </body>
 </html>
+<?php
+}
+?>
