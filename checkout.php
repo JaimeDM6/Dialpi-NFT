@@ -4,7 +4,6 @@ require_once 'conexion.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
     $_SESSION['invitado'] = [
         'nombre' => $_POST['nombre'],
@@ -15,19 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
     header('Location: /checkout?direccion');
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion'])) {
     $idUsuario = $_SESSION['usuario']['id'];
-
     $query = "UPDATE Usuarios SET direccion_usuario = NULL, cp_usuario = NULL, poblacion_usuario = NULL, estado_provincia = NULL, pais_usuario = NULL WHERE id_usuario = ?";
     $stmt = $conexion->prepare($query);
     $stmt->bind_param('i', $idUsuario);
     $stmt->execute();
-
     echo json_encode(['success' => $stmt->affected_rows > 0]);
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvitado'])) {
     $_SESSION['invitado'] = [
         'direccion' => '',
@@ -36,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
         'estado' => '',
         'pais' => '',
     ];
-
     echo json_encode(['success' => true]);
     exit;
 }
@@ -62,11 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
             <h2>Checkout</h2>
             <?php
                 $parametro = array_key_first($_GET);
-
                 if (!isset($_SESSION['cart'])) {
                     echo "No hay pedidos en el carrito.";
                 }
-
                 switch ($parametro) {
                     case 'invitado':
                         if (isset($_SESSION['cart'])) {
@@ -101,22 +93,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
 
                                 if ($direccion['direccion_usuario'] !== null) {
                                 ?>
-                                <div class="direccion">
-                                    <h3>Dirección postal</h3>
-                                    <p>Dirección: <?= $direccion['direccion_usuario'] ?></p>
-                                    <p>Código Postal: <?= $direccion['cp_usuario'] ?></p>
-                                    <p>Población: <?= $direccion['poblacion_usuario'] ?></p>
-                                    <p>País: <?= $direccion['pais_usuario'] ?></p><br>
-                                    <button onclick="location.href='/checkout?direccion-edit'">Editar</button>
-                                    <button id="eliminar-direccion">Eliminar</button>
-                                </div>
+                                    <div class="direccion">
+                                        <h3>Dirección de facturación</h3>
+                                        <p>Dirección: <?= $direccion['direccion_usuario'] ?></p>
+                                        <p>Código Postal: <?= $direccion['cp_usuario'] ?></p>
+                                        <p>Población: <?= $direccion['poblacion_usuario'] ?></p>
+                                        <p>Estado/Provincia: <?= $direccion['estado_provincia'] ?></p>
+                                        <p>País: <?= $direccion['pais_usuario'] ?></p><br>
+                                        <div class="botones-centrados">
+                                            <button onclick="location.href='/checkout?direccion-edit'">Editar</button>
+                                            <button id="eliminar-direccion">Eliminar</button>
+                                        </div>
+                                    </div>
+                                    <div class="boton-derecha">
+                                        <button class="siguiente" onclick="location.href='/checkout?metodo-pago'">Seleccionar</button>
+                                    </div>
                                 <?php
                                 } else {
                                 ?>
-                                <div class="direccion">
-                                    <p>No hay ninguna dirección guardada.</p>
-                                    <button onclick="location.href='/añadirDireccion'">Añadir</button>
-                                </div>
+                                    <div class="direccion">
+                                        <p>No hay ninguna dirección guardada.</p><br>
+                                        <div class="botones-centrados">
+                                            <button onclick="location.href='/checkout?direccion-edit'">Añadir</button>
+                                        </div>
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                    $_SESSION['invitado'] = [
+                                        'direccion' => isset($_POST['direccion']) ? $_POST['direccion'] : '',
+                                        'cp' => isset($_POST['cp']) ? $_POST['cp'] : '',
+                                        'poblacion' => isset($_POST['poblacion']) ? $_POST['poblacion'] : '',
+                                        'estado' => isset($_POST['estado']) ? $_POST['estado'] : '',
+                                        'pais' => isset($_POST['pais']) ? $_POST['pais'] : '',
+                                    ];
+                                }
+
+                                if (isset($_SESSION['invitado']['direccion']) && $_SESSION['invitado']['direccion'] !== '') {
+                                ?>
+                                    <div class="direccion">
+                                        <h3>Dirección de facturación</h3>
+                                        <p>Dirección: <?= $_SESSION['invitado']['direccion'] ?></p>
+                                        <p>Código Postal: <?= $_SESSION['invitado']['cp'] ?></p>
+                                        <p>Población: <?= $_SESSION['invitado']['poblacion'] ?></p>
+                                        <p>Estado/Provincia: <?= $_SESSION['invitado']['estado'] ?></p>
+                                        <p>País: <?= $_SESSION['invitado']['pais'] ?></p><br>
+                                        <div class="botones-centrados">
+                                            <button onclick="location.href='/checkout?direccion-edit'">Editar</button>
+                                            <button id="eliminar-direccion-invitado">Eliminar</button>
+                                        </div>
+                                    </div>
+                                    <div class="boton-derecha">
+                                        <button class="siguiente" onclick="location.href='/checkout?metodo-pago'">Seleccionar</button>
+                                    </div>
+                                <?php
+                                } else {
+                                    ?>
+                                    <div class="direccion">
+                                        <p>No hay ninguna dirección guardada.</p><br>
+                                        <div class="botones-centrados">
+                                            <button onclick="location.href='/checkout?direccion-edit'">Añadir</button>
+                                        </div>
+                                    </div>
                                 <?php
                                 }
                             }
@@ -124,10 +163,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         break;
                     case 'direccion-edit':
                         if (isset($_SESSION['cart'])) {
-                        ?>
-                            <div class="direccion">
-                                <form action="checkout.php" method="post" class="direccion">
-                                    <h3>Dirección postal</h3>
+                            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                $direccion = $_POST['direccion'];
+                                $cp = $_POST['cp'];
+                                $poblacion = $_POST['poblacion'];
+                                $estado = $_POST['estado'];
+                                $pais = $_POST['pais'];
+
+                                $query = "UPDATE Usuarios SET direccion_usuario = ?, cp_usuario = ?, poblacion_usuario = ?, estado_provincia = ?, pais_usuario = ? WHERE id_usuario = ?";
+
+                                $stmt = $conexion->prepare($query);
+                                $stmt->bind_param('sssssi', $direccion, $cp, $poblacion, $estado, $pais, $_SESSION['usuario']['id']);
+                                $stmt->execute();
+
+                                if ($stmt->affected_rows > 0) {
+                                    echo "Dirección actualizada con éxito.";
+                                    header('Location: /checkout?direccion');
+                                } else {
+                                    echo "No se pudo actualizar la dirección.";
+                                }
+                            }
+
+                            if (isset($_SESSION['usuario'])) {
+                                $idUsuario = $_SESSION['usuario']['id'];
+
+                                $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, estado_provincia, pais_usuario FROM Usuarios WHERE id_usuario = ?";
+                                $stmt = $conexion->prepare($query);
+                                $stmt->bind_param('i', $idUsuario);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $direccion = $result->fetch_assoc();
+                            ?>
+                                <form action="checkout?direccion-edit" method="post" class="direccion-form">
+                                    <h3>Dirección de facturación</h3>
                                     <label for="direccion">Dirección:</label>
                                     <input type="text" id="direccion" name="direccion" value="<?= $direccion['direccion_usuario'] ?>">
                                     <label for="cp">Código Postal:</label>
@@ -137,15 +205,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                     <label for="estado">Estado/Provincia:</label>
                                     <input type="text" id="estado" name="estado" value="<?= $direccion['estado_provincia'] ?>">
                                     <label for="pais">País:</label>
-                                    <?php include 'select_paises.html'; ?>
+                                    <?php include 'select_paises.php'; ?>
                                     <br>
                                     <div class="direccion-button">
                                         <input type="submit" value="Guardar">
                                         <a href="/checkout?direccion" class="cancel-button">Cancelar</a>
                                     </div>
                                 </form>
-                            </div>
-                        <?php
+                            <?php
+                            } else {
+                            ?>
+                                <form action="checkout?direccion" method="post" class="direccion-form">
+                                    <h3>Dirección de facturación</h3>
+                                    <label for="direccion">Dirección:</label>
+                                    <input type="text" id="direccion" name="direccion" value="<?= isset($_SESSION['invitado']['direccion']) ? $_SESSION['invitado']['direccion'] : '' ?>">
+                                    <label for="cp">Código Postal:</label>
+                                    <input type="text" id="cp" name="cp" value="<?= isset($_SESSION['invitado']['cp']) ? $_SESSION['invitado']['cp'] : '' ?>">
+                                    <label for="poblacion">Población:</label>
+                                    <input type="text" id="poblacion" name="poblacion" value="<?= isset($_SESSION['invitado']['poblacion']) ? $_SESSION['invitado']['poblacion'] : '' ?>">
+                                    <label for="estado">Estado/Provincia:</label>
+                                    <input type="text" id="estado" name="estado" value="<?= isset($_SESSION['invitado']['estado']) ? $_SESSION['invitado']['estado'] : '' ?>">
+                                    <label for="pais">País:</label>
+                                    <?php include 'select_paises.php'; ?>
+                                    <br>
+                                    <div class="direccion-button">
+                                        <input type="submit" value="Guardar">
+                                        <a href="/checkout?direccion" class="cancel-button">Cancelar</a>
+                                    </div>
+                                </form>
+                            <?php
+                            }
                         }
                         break;
                     case 'metodo-pago':
@@ -244,7 +333,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             <input type="submit" value="Iniciar sesión">
                                         </form>
                                     </div>
-
                                     <div class="cuenta-der">
                                         <a href="/checkout?invitado" class="login-button">Continuar como invitado</a>
                                     </div>
@@ -263,7 +351,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
         $(document).ready(function(){
             $('.login-form').on('submit', function(e) {
                 e.preventDefault();
-
                 $.ajax({
                     url: '/login',
                     method: 'POST',
@@ -278,7 +365,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
-
             $('#eliminar-direccion').on('click', function(e) {
                 e.preventDefault();
             
@@ -296,7 +382,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
-
             $('#eliminar-direccion-invitado').on('click', function(e) {
                 e.preventDefault();
             
@@ -313,24 +398,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         }
                     }
                 });
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var tarjetaRadio = document.getElementById('tarjeta');
-            var paypalRadio = document.getElementById('paypal');
-            var tarjetaForm = document.getElementById('tarjeta-form');
-    
-            tarjetaRadio.addEventListener('change', function() {
-                if (this.checked) {
-                    tarjetaForm.style.display = 'block';
-                }
-            });
-    
-            paypalRadio.addEventListener('change', function() {
-                if (this.checked) {
-                    tarjetaForm.style.display = 'none';
-                }
             });
         });
     </script>
