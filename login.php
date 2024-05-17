@@ -1,4 +1,5 @@
 <?php
+$title = 'Iniciar sesión';
     session_start();
     if (isset($_SESSION['usuario'])) {
         header('Location: /');

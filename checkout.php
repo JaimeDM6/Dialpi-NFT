@@ -1,4 +1,5 @@
 <?php
+$title = 'Checkout';
 session_start();
 require_once 'conexion.php';
 ini_set('display_errors', 1);
