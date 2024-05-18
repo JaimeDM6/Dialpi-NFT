@@ -550,6 +550,47 @@ h2 {
     font-size: 0.8em;
 }
 
+/* Estilos para la página de NFT */
+
+.nft-details-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nft-details {
+    flex: 0 0 60%;
+}
+
+.nft-image {
+    margin-right: 20px;
+}
+
+.nft-info {
+    max-width: 600px;
+}
+
+.nft-info h2 {
+    margin-top: 0;
+}
+
+.button-cart-container {
+    margin-top: 20px;
+}
+
+.collection-preview {
+    flex: 0 0 30%;
+    padding-left: 20px;
+    border-left: 1px solid #ccc;
+}
+
+.collection-preview h3 {
+    margin-top: 0;
+}
+
+.collection-item {
+    margin-bottom: 20px;
+}
+
 /* Estilos para el carrito de compra */
 .cart-item {
     display: flex;
