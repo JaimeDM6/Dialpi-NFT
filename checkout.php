@@ -415,24 +415,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
             });
 
             $('.invitado-form').on('submit', function(e) {
-            e.preventDefault();
-    
-            $.ajax({
-                url: '/checkout',
-                method: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                success: function(response) {
-                    if (response.error) {
-                        $('#error-message').css('color', 'red');
-                        $('#error-message').text(response.message);
-                        $('html, body').animate({ scrollTop: 0 }, 'fast');
-                    } else {
-                        window.location.href = '/checkout?direccion';
+                e.preventDefault();
+        
+                $.ajax({
+                    url: '/checkout',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.error) {
+                            $('#error-message').css('color', 'red');
+                            $('#error-message').text(response.message);
+                            $('html, body').animate({ scrollTop: 0 }, 'fast');
+                        } else {
+                            window.location.href = '/checkout?direccion';
+                        }
                     }
-                }
+                });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var numeroTarjeta = document.querySelector('.numero-tarjeta');
+            var cvv = document.querySelector('.cvv-input');
+        
+            cvv.addEventListener('input', function() {
+                var valor = this.value.replace(/\D/g, '');
+        
+                this.value = valor;
+            });
+        
+            numeroTarjeta.addEventListener('input', updateCardInfo);
+        
+            function updateCardInfo() {
+                var cardNumber = this.value.replace(/\D/g, '');
+                var cardType = getCardType(cardNumber);
+        
+                switch (cardType) {
+                    case 'amex':
+                        cardNumber = cardNumber.replace(/(\d{4})(\d{6})(\d{5})/, '$1 $2 $3');
+                        cvv.setAttribute('maxlength', '4');
+                        break;
+                    case 'visa':
+                    case 'mastercard':
+                    case 'discover':
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    case 'diners':
+                        cardNumber = cardNumber.replace(/(\d{4})(\d{4})(\d{4})(\d{2})/, '$1 $2 $3 $4');
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    case 'jcb':
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                    default:
+                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
+                        cvv.setAttribute('maxlength', '3');
+                        break;
+                }
+        
+                this.value = cardNumber;
+        
+                if (cardType) {
+                    this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
+                    this.style.backgroundRepeat = 'no-repeat';
+                    this.style.backgroundPosition = 'right 10px center';
+                    this.style.backgroundSize = 'auto 20px';
+                } else {
+                    this.style.backgroundImage = '';
+                }
+            }
+        
+            function getCardType(cardNumber) {
+                var cardTypes = {
+                    amex: [/^3[47][0-9]{13}$/],
+                    visa: [/^4[0-9]{12}(?:[0-9]{3})?$/],
+                    mastercard: [/^5[1-5][0-9]{14}$/, /^2[2-7][0-9]{14}$/],
+                    discover: [/^6011[0-9]{12}[0-9]*$/, /^62[24568][0-9]{13}[0-9]*$/, /^6[45][0-9]{14}[0-9]*$/],
+                    diners: [/^3[0689][0-9]{12}[0-9]*$/],
+                    jcb: [/^35[0-9]{14}[0-9]*$/]
+                };
+        
+                for (var type in cardTypes) {
+                    var regexes = cardTypes[type];
+                    for (var i = 0; i < regexes.length; i++) {
+                        if (regexes[i].test(cardNumber.replace(/\s/g, ''))) {
+                            return type;
+                        }
+                    }
+                }
+        
+                return null;
+            }
         });
     </script>
     <script src="script/intlTelInputWithUtils.js"></script>
