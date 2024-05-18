@@ -1,4 +1,5 @@
-<?php 
+<?php
+$title = 'Mi cuenta';
 session_start();
 require_once 'conexion.php';
 

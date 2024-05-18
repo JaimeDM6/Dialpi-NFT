@@ -278,24 +278,24 @@ h2 {
     grid-gap: 20px;
 }
 
-.collection-box {
+.collection-box, .collection-box-disabled {
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.collection-box img {
+.collection-box img, img {
     width: 100%;
     height: auto;
 }
 
-.collection-box h3 {
+.collection-box h3, .collection-box-disabled h3 {
     font-size: 1em;
     margin: 10px 0;
     text-align: center;
 }
 
-.collection-box a {
+.collection-box a, .collection-box-disabled a {
     display: block;
     text-decoration: none;
     color: #222744;
@@ -310,19 +310,19 @@ h2 {
     color: #2ba3b9;
 }
 
-.collection-box a img {
+.collection-box a img, .collection-box-disabled a img {
     width: 100%;
     height: auto;
     transition: all 0.3s ease;
 }
 
-.collection-box a h3 {
+.collection-box a h3, .collection-box-disabled a h3 {
     margin: 10px 0;
     font-size: 1.2em;
     font-weight: bold;
 }
 
-.collection-box a p {
+.collection-box a p, .collection-box-disabled a p {
     margin: 0;
     font-size: 0.9em;
     padding: 3px 10px;
@@ -443,25 +443,25 @@ h2 {
     margin-top: 50px;
 }
 
-.nft-box {
+.nft-box, .nft-box-disabled {
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
     margin-bottom: 20px;
 }
 
-.nft-box img {
+.nft-box img, .nft-box-disabled img {
     width: 100%;
     height: auto;
 }
 
-.nft-box h3 {
+.nft-box h3, .nft-box-disabled h3 {
     font-size: 1em;
     margin: 10px 0;
     text-align: center;
 }
 
-.nft-box a {
+.nft-box a, .nft-box-disabled a {
     display: block;
     text-decoration: none;
     color: #222744;
@@ -476,19 +476,19 @@ h2 {
     color: #2ba3b9;
 }
 
-.nft-box a img {
+.nft-box a img, .nft-box-disabled a img {
     width: 100%;
     height: auto;
     transition: all 0.3s ease;
 }
 
-.nft-box a h3 {
+.nft-box a h3, .nft-box-disabled a h3 {
     margin: 10px 0;
     font-size: 1.2em;
     font-weight: bold;
 }
 
-.nft-box a p {
+.nft-box a p, .nft-box-disabled a p {
     margin: 0;
     font-size: 0.9em;
     padding: 3px 10px;
@@ -499,7 +499,7 @@ h2 {
     justify-content: center;
 }
 
-.add-to-cart {
+.add-to-cart, .add-to-cart-disabled {
     background-color: #2F4C5C;
     color: white;
     padding: 10px 20px;
@@ -515,11 +515,15 @@ h2 {
     margin-bottom: 10px;
 }
 
+.add-to-cart-disabled {
+    background-color: grey;
+}
+
 .add-to-cart:hover {
     background-color: #2ba3b9;
 }
 
-.add-to-cart i {
+.add-to-cart i, .add-to-cart-disabled i {
     margin-right: 5px;
 }
 

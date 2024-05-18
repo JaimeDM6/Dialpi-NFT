@@ -1,4 +1,5 @@
 <?php
+$title = 'Iniciar sesión';
     session_start();
     if (isset($_SESSION['usuario'])) {
         header('Location: /');
@@ -24,6 +25,7 @@
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['password_usuario'])) {
                 $_SESSION['usuario'] = [
+                    'dni' => $user['dni_usuario'],
                     'nombre' => $user['nombre_usuario'],
                     'apellidos' => $user['apellidos_usuario'],
                     'id' => $user['id_usuario'],
@@ -40,6 +42,7 @@
                 $stmt->execute();
 
                 $_SESSION['usuario'] = [
+                    'dni' => $user['dni_usuario'],
                     'nombre' => $user['nombre_usuario'],
                     'apellidos' => $user['apellidos_usuario'],
                     'id' => $user['id_usuario'],

@@ -1,18 +1,25 @@
 <?php
+$title = 'Checkout';
 session_start();
 require_once 'conexion.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
-    $_SESSION['invitado'] = [
-        'nombre' => $_POST['nombre'],
-        'apellidos' => $_POST['apellidos'],
-        'email' => $_POST['email'],
-        'telefono' => $_POST['telefono'],
-    ];
-    header('Location: /checkout?direccion');
-    exit;
+    if (!validar_dni($dni)) {
+        $response['error'] = true;
+        $response['message'] = 'El DNI no es válido.';
+    } else {
+        $_SESSION['invitado'] = [
+            'nombre' => $_POST['nombre'],
+            'apellidos' => $_POST['apellidos'],
+            'dni' => $_POST['dni'],
+            'email' => $_POST['email'],
+            'telefono' => $_POST['telefono'],
+        ];
+
+        $response['message'] = 'success';
+    }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion'])) {
     $idUsuario = $_SESSION['usuario']['id'];
@@ -65,10 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         ?>
                             <div class="invitado">
                                 <form method="POST" action="/checkout?direccion" class="invitado-form">
+                                    <p id="error-message" style="color: red;"></p>
                                     <label for="nombre">Nombre:</label><br>
                                     <input type="text" id="nombre" name="nombre" required autocomplete="name"><br>
                                     <label for="apellidos">Apellidos:</label><br>
                                     <input type="text" id="apellidos" name="apellidos" required autocomplete="family-name"><br>
+                                    <label for="dni">DNI:</label><br>
+                                    <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
                                     <label for="email">Correo electrónico:</label><br>
                                     <input type="email" id="email" name="email" required autocomplete="email"><br>
                                     <label for="telefono">Número de teléfono:</label><br>
@@ -367,6 +377,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
+
             $('#eliminar-direccion').on('click', function(e) {
                 e.preventDefault();
             
@@ -384,6 +395,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
+
             $('#eliminar-direccion-invitado').on('click', function(e) {
                 e.preventDefault();
             
@@ -401,82 +413,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
-        });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var numeroTarjeta = document.querySelector('.numero-tarjeta');
-            var cvv = document.querySelector('.cvv-input');
-
-            cvv.addEventListener('input', function() {
-                var valor = this.value.replace(/\D/g, '');
-
-                this.value = valor;
-            });
-
-            numeroTarjeta.addEventListener('input', updateCardInfo);
-
-            function updateCardInfo() {
-                var cardNumber = this.value.replace(/\D/g, '');
-                var cardType = getCardType(cardNumber);
-
-                switch (cardType) {
-                    case 'amex':
-                        cardNumber = cardNumber.replace(/(\d{4})(\d{6})(\d{5})/, '$1 $2 $3');
-                        cvv.setAttribute('maxlength', '4');
-                        break;
-                    case 'visa':
-                    case 'mastercard':
-                    case 'discover':
-                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
-                        cvv.setAttribute('maxlength', '3');
-                        break;
-                    case 'diners':
-                        cardNumber = cardNumber.replace(/(\d{4})(\d{4})(\d{4})(\d{2})/, '$1 $2 $3 $4');
-                        cvv.setAttribute('maxlength', '3');
-                        break;
-                    case 'jcb':
-                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
-                        cvv.setAttribute('maxlength', '3');
-                        break;
-                    default:
-                        cardNumber = cardNumber.replace(/(\d{4})/g, '$1 ').trim();
-                        cvv.setAttribute('maxlength', '3');
-                        break;
-                }
-
-                this.value = cardNumber;
-
-                if (cardType) {
-                    this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
-                    this.style.backgroundRepeat = 'no-repeat';
-                    this.style.backgroundPosition = 'right 10px center';
-                    this.style.backgroundSize = 'auto 20px';
-                } else {
-                    this.style.backgroundImage = '';
-                }
-            }
-
-            function getCardType(cardNumber) {
-                var cardTypes = {
-                    amex: [/^3[47][0-9]{13}$/],
-                    visa: [/^4[0-9]{12}(?:[0-9]{3})?$/],
-                    mastercard: [/^5[1-5][0-9]{14}$/, /^2[2-7][0-9]{14}$/],
-                    discover: [/^6011[0-9]{12}[0-9]*$/, /^62[24568][0-9]{13}[0-9]*$/, /^6[45][0-9]{14}[0-9]*$/],
-                    diners: [/^3[0689][0-9]{12}[0-9]*$/],
-                    jcb: [/^35[0-9]{14}[0-9]*$/]
-                };
-
-                for (var type in cardTypes) {
-                    var regexes = cardTypes[type];
-                    for (var i = 0; i < regexes.length; i++) {
-                        if (regexes[i].test(cardNumber.replace(/\s/g, ''))) {
-                            return type;
-                        }
+            $('.invitado-form').on('submit', function(e) {
+            e.preventDefault();
+    
+            $.ajax({
+                url: '/checkout',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        $('#error-message').css('color', 'red');
+                        $('#error-message').text(response.message);
+                        $('html, body').animate({ scrollTop: 0 }, 'fast');
+                    } else {
+                        window.location.href = '/checkout?direccion';
                     }
                 }
-
-                return null;
-            }
+            });
+        });
         });
     </script>
     <script src="script/intlTelInputWithUtils.js"></script>

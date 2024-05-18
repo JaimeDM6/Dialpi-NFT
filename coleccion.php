@@ -1,4 +1,5 @@
 <?php
+    $title = 'Colección - Dialpi NFT';
     session_start();
     require_once 'conexion.php';
     ini_set('display_errors', 1);
@@ -60,19 +61,35 @@
                     if ($result_nft->num_rows > 0) {
                         echo '<div class="nft-grid">';
                         while ($row_nft = $result_nft->fetch_assoc()) {
-                            echo '<div class="nft-box">';
-                            echo '<a href="/nft?id=' . $row_nft["id_nft"] . '">';
-                            echo '<img src="img/colecciones/' . $row["nombre_coleccion"] . '/' . $row_nft["nombre_nft"] . '.png" alt="' . $row_nft["nombre_nft"] . '">';
-                            echo '<h3>' . ucfirst($row_nft["nombre_nft"]) . '</h3>';
-                            echo '<p>Precio: ' . $row_nft["precio"] . ' ETH</p>';
-                            echo '</a>';
-                            echo '<div class="button-cart-container">';
-                            echo '<form class="add-to-cart-form" method="POST" action="">';
-                            echo '<input type="hidden" name="product_id" value=' . $row_nft['id_nft'] . '>';
-                            echo '<button type="submit" class="add-to-cart"><i class="fas fa-shopping-cart"></i>Agregar al carrito</button>';
-                            echo '</form>';
-                            echo '</div>';
-                            echo '</div>';
+                            if ($row_nft['disponible'] === 'Sí') {
+                                echo '<div class="nft-box">';
+                                echo '<a href="/nft?id=' . $row_nft["id_nft"] . '">';
+                                echo '<img src="img/colecciones/' . $row["nombre_coleccion"] . '/' . $row_nft["nombre_nft"] . '.png" alt="' . $row_nft["nombre_nft"] . '">';
+                                echo '<h3>' . ucfirst($row_nft["nombre_nft"]) . '</h3>';
+                                echo '<p>Precio: ' . $row_nft["precio"] . ' ETH</p>';
+                                echo '</a>';
+                                echo '<div class="button-cart-container">';
+                                echo '<form class="add-to-cart-form" method="POST" action="">';
+                                echo '<input type="hidden" name="product_id" value=' . $row_nft['id_nft'] . '>';
+                                echo '<button type="submit" class="add-to-cart"><i class="fas fa-shopping-cart"></i>Agregar al carrito</button>';
+                                echo '</form>';
+                                echo '</div>';
+                                echo '</div>';
+                            } else {
+                                echo '<div class="nft-box-disabled" style="opacity: 0.5; cursor: not-allowed;">';
+                                echo '<a>';
+                                echo '<img src="img/colecciones/' . $row["nombre_coleccion"] . '/' . $row_nft["nombre_nft"] . '.png" alt="' . $row_nft["nombre_nft"] . '">';
+                                echo '<h3>' . ucfirst($row_nft["nombre_nft"]) . '</h3>';
+                                echo '<p>Precio: ' . $row_nft["precio"] . ' ETH</p>';
+                                echo '</a>';
+                                echo '<div class="button-cart-container">';
+                                echo '<form class="add-to-cart-form" method="POST" action="">';
+                                echo '<input type="hidden" name="product_id" value=' . $row_nft['id_nft'] . '>';
+                                echo '<button style="cursor: not-allowed;" type="button" class="add-to-cart-disabled" disabled><i class="fas fa-shopping-cart"></i>No disponible</button>';
+                                echo '</form>';
+                                echo '</div>';
+                                echo '</div>';
+                            }
                         }
                         echo '</div>';
                     } else {

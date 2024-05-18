@@ -1,5 +1,8 @@
-<?php include 'head.php'; ?>
-    <?php include 'header-center.php'; ?>
+<?php
+$title = 'Error 404';
+include 'head.php';
+    include 'header-center.php';
+    ?>
     <main>
         <div class="error-404">
             <h1>Página no encontrada</h1>

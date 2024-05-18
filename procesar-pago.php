@@ -1,5 +1,10 @@
 <?php
+$title = 'Procesar pago';
 session_start();
+require_once 'conexion.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mes = $_POST["Mes"];
@@ -27,7 +32,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "La tarjeta ha caducado";
     } else {
         $_SESSION['pago_realizado'] = true;
+
+        foreach ($_SESSION['cart'] as $productId) {
+            $sql = "UPDATE NFT SET disponible = 'No' WHERE id_nft = ?";
+            $stmt = mysqli_prepare($conexion, $sql);
+            mysqli_stmt_bind_param($stmt, "i", $productId);
+            $result = mysqli_stmt_execute($stmt);
+        }
     }
+}
+
+if (isset($_GET['procesado'])) {
+    if (isset($_SESSION['invitado'])) {
+        unset($_SESSION['invitado']);
+    }
+
+    if (isset($_SESSION['cart'])) {
+        unset($_SESSION['cart']);
+    }
+
+    header('Location: /');
+    exit;
 }
 
 include 'head.php';
@@ -50,9 +75,11 @@ if (isset($_GET['confirmar'])) {
     include 'header-center.php';
     ?>
     <main>
-        <div class="container">
-            <h2>El pago se ha realizado correctamente.</h2>
-            <a href="/certificado?id=21498">Pulse aquí para descargar su certificado.</a>
+        <div class="error-404">
+            <h1>El pago se ha realizado correctamente.</h1>
+            <a href="/certificado" target="_blank">Pulsa aquí para descargar tu certificado.</a><br>
+            <img src="/img/exito.png" alt="Éxito">
+            <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         </div>
     </main>
     <?php include 'footer.php'; ?>

@@ -1,7 +1,7 @@
 <header>
     <div class="container-header">
         <div class="logo">
-            <a href="/"><img src="img/Dialpi NFT.png" alt="Dialpi NFT Logo"></a>
+            <a href="/"><img src="/img/Dialpi_NFT.png" alt="Dialpi NFT Logo"></a>
             <a href="/"><h1>Dialpi NFT</h1></a>
         </div>
         <nav class="barra-navegacion">
@@ -49,7 +49,7 @@
     <div class="container-header-movil">
         <div class="logo-dropdown">
             <div class="logo-movil">
-                <a href="/"><img src="img/Dialpi NFT.png" alt="Dialpi NFT Logo"></a>
+                <a href="/"><img src="/img/Dialpi_NFT.png" alt="Dialpi NFT Logo"></a>
                 <a href="/"><h1>Dialpi NFT</h1></a>
             </div>
             <div class="boton-menu">
