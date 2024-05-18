@@ -5,7 +5,16 @@ require_once 'conexion.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
+    $dni = $_POST['dni'];
+
+    function validar_dni($dni) {
+        $letra = substr($dni, -1);
+        $numeros = substr($dni, 0, -1);
+        return strtoupper($letra) === substr('TRWAGMYFPDXBNJZSQVHLCKE', strtr($numeros, 'XYZ', '012')%23, 1);
+    }
+
     if (!validar_dni($dni)) {
         $response['error'] = true;
         $response['message'] = 'El DNI no es válido.';
@@ -20,7 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
 
         $response['message'] = 'success';
     }
+
+    echo json_encode($response);
+    exit;
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion'])) {
     $idUsuario = $_SESSION['usuario']['id'];
     $query = "UPDATE Usuarios SET direccion_usuario = NULL, cp_usuario = NULL, poblacion_usuario = NULL, estado_provincia = NULL, pais_usuario = NULL WHERE id_usuario = ?";
@@ -32,6 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion']))
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvitado'])) {
     $_SESSION['invitado'] = [
+        'nombre' => $_SESSION['invitado']['nombre'],
+        'apellidos' => $_SESSION['invitado']['apellidos'],
+        'dni' => $_SESSION['invitado']['dni'],
+        'email' => $_SESSION['invitado']['email'],
+        'telefono' => $_SESSION['invitado']['telefono'],
         'direccion' => '',
         'cp' => '',
         'poblacion' => '',
@@ -132,6 +150,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                             } else {
                                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     $_SESSION['invitado'] = [
+                                        'nombre' => $_SESSION['invitado']['nombre'],
+                                        'apellidos' => $_SESSION['invitado']['apellidos'],
+                                        'dni' => $_SESSION['invitado']['dni'],
+                                        'email' => $_SESSION['invitado']['email'],
+                                        'telefono' => $_SESSION['invitado']['telefono'],
                                         'direccion' => isset($_POST['direccion']) ? $_POST['direccion'] : '',
                                         'cp' => isset($_POST['cp']) ? $_POST['cp'] : '',
                                         'poblacion' => isset($_POST['poblacion']) ? $_POST['poblacion'] : '',
@@ -298,11 +321,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                         </div>
                                     </div>
                                     <div class="metodo-pago-botones">
-                                        <button type="submit" class="boton-proceder">Pagar con tarjeta</button>
+                                        <button type="submit" class="boton-proceder" name="boton-proceder">Pagar con tarjeta</button>
                                     </div>
                                 </form>
                                 <div class="metodo-pago-botones">
-                                    <button class="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                    <button class="boton-paypal" name="boton-paypal"><a href="/paypal">Pagar con</a></button>
                                 </div>
                     
                                 <?php
@@ -326,7 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         break;
                     default:
                         if (isset($_SESSION['cart'])) {
-                            if (isset($_SESSION['usuario'])) {
+                            if (isset($_SESSION['usuario']) || isset($_SESSION['invitado'])) {
                                 header('Location: /checkout?direccion');
                                 exit;
                             } else {
@@ -418,7 +441,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                 e.preventDefault();
         
                 $.ajax({
-                    url: '/checkout',
+                    url: '/checkout?invitado',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',

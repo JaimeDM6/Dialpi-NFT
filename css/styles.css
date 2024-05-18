@@ -284,7 +284,7 @@ h2 {
     overflow: hidden;
 }
 
-.collection-box img, img {
+.collection-box img, .collection-box img {
     width: 100%;
     height: auto;
 }
