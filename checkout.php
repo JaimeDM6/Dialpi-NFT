@@ -60,8 +60,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
     }
 
     echo json_encode($response);
+    $dni = $_POST['dni'];
+
+    function validar_dni($dni) {
+        $letra = substr($dni, -1);
+        $numeros = substr($dni, 0, -1);
+        return strtoupper($letra) === substr('TRWAGMYFPDXBNJZSQVHLCKE', strtr($numeros, 'XYZ', '012')%23, 1);
+    }
+
+    if (!validar_dni($dni)) {
+        $response['error'] = true;
+        $response['message'] = 'El DNI no es válido.';
+    } else {
+        $_SESSION['invitado'] = [
+            'nombre' => $_POST['nombre'],
+            'apellidos' => $_POST['apellidos'],
+            'dni' => $_POST['dni'],
+            'email' => $_POST['email'],
+            'telefono' => $_POST['telefono'],
+        ];
+
+        $response['message'] = 'success';
+    }
+
+    echo json_encode($response);
     exit;
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion'])) {
     $idUsuario = $_SESSION['usuario']['id'];
@@ -75,6 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion']))
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvitado'])) {
     $_SESSION['invitado'] = [
+        'nombre' => $_SESSION['invitado']['nombre'],
+        'apellidos' => $_SESSION['invitado']['apellidos'],
+        'dni' => $_SESSION['invitado']['dni'],
+        'email' => $_SESSION['invitado']['email'],
+        'telefono' => $_SESSION['invitado']['telefono'],
         'nombre' => $_SESSION['invitado']['nombre'],
         'apellidos' => $_SESSION['invitado']['apellidos'],
         'dni' => $_SESSION['invitado']['dni'],
@@ -123,10 +153,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                             <div class="invitado">
                                 <form method="POST" action="/checkout?direccion" class="invitado-form">
                                     <p id="error-message" style="color: red;"></p>
+                                    <p id="error-message" style="color: red;"></p>
                                     <label for="nombre">Nombre:</label><br>
                                     <input type="text" id="nombre" name="nombre" required autocomplete="name"><br>
                                     <label for="apellidos">Apellidos:</label><br>
                                     <input type="text" id="apellidos" name="apellidos" required autocomplete="family-name"><br>
+                                    <label for="dni">DNI:</label><br>
+                                    <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
                                     <label for="dni">DNI:</label><br>
                                     <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
                                     <label for="email">Correo electrónico:</label><br>
@@ -182,6 +215,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                             } else {
                                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     $_SESSION['invitado'] = [
+                                        'nombre' => $_SESSION['invitado']['nombre'],
+                                        'apellidos' => $_SESSION['invitado']['apellidos'],
+                                        'dni' => $_SESSION['invitado']['dni'],
+                                        'email' => $_SESSION['invitado']['email'],
+                                        'telefono' => $_SESSION['invitado']['telefono'],
                                         'nombre' => $_SESSION['invitado']['nombre'],
                                         'apellidos' => $_SESSION['invitado']['apellidos'],
                                         'dni' => $_SESSION['invitado']['dni'],
@@ -597,6 +635,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                 });
             });
 
+
             $('#eliminar-direccion').on('click', function(e) {
                 e.preventDefault();
             
@@ -614,6 +653,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
+
 
             $('#eliminar-direccion-invitado').on('click', function(e) {
                 e.preventDefault();

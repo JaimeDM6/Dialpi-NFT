@@ -72,6 +72,8 @@ include 'head.php';
 
 $numeroFactura = null;
 
+$numeroFactura = null;
+
 if (isset($_SESSION['pago_realizado'])) {
     do {
         $numeroFactura = generarNumeroFactura();
@@ -154,6 +156,12 @@ if (isset($_GET['confirmar'])) {
     include 'header-center.php';
     ?>
     <main>
+        <div class="error-404">
+            <h1>El pago se ha realizado correctamente.</h1>
+            <h2>Número de pedido <?php echo $numeroFactura; ?></h2>
+            <a href="/certificado" target="_blank">Pulsa aquí para descargar tu certificado.</a><br>
+            <img src="/img/exito.png" alt="Éxito">
+            <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         <div class="error-404">
             <h1>El pago se ha realizado correctamente.</h1>
             <h2>Número de pedido <?php echo $numeroFactura; ?></h2>
