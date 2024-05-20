@@ -163,3 +163,25 @@ window.addEventListener('resize', function() {
         searchIcon.style.animation = 'none';
     }
 });
+
+document.getElementById('cart-icon').addEventListener('mouseover', function() {
+    document.querySelector('.cart-dropdown').classList.add('show');
+});
+
+document.getElementById('cart-icon').addEventListener('mouseout', function() {
+    document.querySelector('.cart-dropdown').classList.remove('show');
+});
+
+document.getElementById('logout').addEventListener('click', function(e) {
+    e.preventDefault();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/logout', true);
+    xhr.onload = function() {
+        if (this.status == 200) {
+            localStorage.clear();
+            window.location.href = "/";
+        }
+    }
+    xhr.send();
+});

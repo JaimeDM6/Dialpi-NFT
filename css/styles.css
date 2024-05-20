@@ -262,6 +262,81 @@ nav ul li a:hover {
     z-index: 1000;
 }
 
+.cart-dropdown {
+    position: absolute;
+    right: 0;
+    width: 300px;
+    color: #000000;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.cart-dropdown.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-right: 5px;
+}
+
+.cart-item-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+}
+
+.cart-item-2 img {
+    width: 70px;
+    height: 70px;
+    margin-right: -50px;
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.cart-total-2 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+.cart-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.cart-button, .checkout-button {
+    text-decoration: none;
+    color: #fff;
+    background-color: #fea84d;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.cart-button:hover, .checkout-button:hover {
+    background-color: #fd763a;
+}
+
 /* Estilos del contenido principal */
 main {
     padding: 20px 0;
@@ -278,24 +353,24 @@ h2 {
     grid-gap: 20px;
 }
 
-.collection-box {
+.collection-box, .collection-box-disabled {
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.collection-box img {
+.collection-box img, .collection-box img {
     width: 100%;
     height: auto;
 }
 
-.collection-box h3 {
+.collection-box h3, .collection-box-disabled h3 {
     font-size: 1em;
     margin: 10px 0;
     text-align: center;
 }
 
-.collection-box a {
+.collection-box a, .collection-box-disabled a {
     display: block;
     text-decoration: none;
     color: #222744;
@@ -310,19 +385,19 @@ h2 {
     color: #2ba3b9;
 }
 
-.collection-box a img {
+.collection-box a img, .collection-box-disabled a img {
     width: 100%;
     height: auto;
     transition: all 0.3s ease;
 }
 
-.collection-box a h3 {
+.collection-box a h3, .collection-box-disabled a h3 {
     margin: 10px 0;
     font-size: 1.2em;
     font-weight: bold;
 }
 
-.collection-box a p {
+.collection-box a p, .collection-box-disabled a p {
     margin: 0;
     font-size: 0.9em;
     padding: 3px 10px;
@@ -443,25 +518,25 @@ h2 {
     margin-top: 50px;
 }
 
-.nft-box {
+.nft-box, .nft-box-disabled {
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
     margin-bottom: 20px;
 }
 
-.nft-box img {
+.nft-box img, .nft-box-disabled img {
     width: 100%;
     height: auto;
 }
 
-.nft-box h3 {
+.nft-box h3, .nft-box-disabled h3 {
     font-size: 1em;
     margin: 10px 0;
     text-align: center;
 }
 
-.nft-box a {
+.nft-box a, .nft-box-disabled a {
     display: block;
     text-decoration: none;
     color: #222744;
@@ -476,19 +551,19 @@ h2 {
     color: #2ba3b9;
 }
 
-.nft-box a img {
+.nft-box a img, .nft-box-disabled a img {
     width: 100%;
     height: auto;
     transition: all 0.3s ease;
 }
 
-.nft-box a h3 {
+.nft-box a h3, .nft-box-disabled a h3 {
     margin: 10px 0;
     font-size: 1.2em;
     font-weight: bold;
 }
 
-.nft-box a p {
+.nft-box a p, .nft-box-disabled a p {
     margin: 0;
     font-size: 0.9em;
     padding: 3px 10px;
@@ -499,7 +574,7 @@ h2 {
     justify-content: center;
 }
 
-.add-to-cart {
+.add-to-cart, .add-to-cart-disabled {
     background-color: #2F4C5C;
     color: white;
     padding: 10px 20px;
@@ -515,11 +590,15 @@ h2 {
     margin-bottom: 10px;
 }
 
+.add-to-cart-disabled {
+    background-color: grey;
+}
+
 .add-to-cart:hover {
     background-color: #2ba3b9;
 }
 
-.add-to-cart i {
+.add-to-cart i, .add-to-cart-disabled i {
     margin-right: 5px;
 }
 
@@ -544,6 +623,47 @@ h2 {
     align-items: center;
     justify-content: center;
     font-size: 0.8em;
+}
+
+/* Estilos para la página de NFT */
+
+.nft-details-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nft-details {
+    flex: 0 0 60%;
+}
+
+.nft-image {
+    margin-right: 20px;
+}
+
+.nft-info {
+    max-width: 600px;
+}
+
+.nft-info h2 {
+    margin-top: 0;
+}
+
+.button-cart-container-2 {
+    margin-top: 20px;
+}
+
+.collection-preview {
+    flex: 0 0 30%;
+    padding-left: 20px;
+    border-left: 1px solid #ccc;
+}
+
+.collection-preview h3 {
+    margin-top: 0;
+}
+
+.collection-item {
+    margin-bottom: 20px;
 }
 
 /* Estilos para el carrito de compra */
@@ -856,6 +976,8 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .metodo-pago {
     width: 100%;
     max-width: 600px;
+    display: flex;
+    justify-content: center;
     margin: 0 auto;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -884,7 +1006,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 }
 
 .numero-tarjeta, .titular-tarjeta {
-    width: 90%;
+    width: 100%;
     margin-bottom: 20px;
     padding-left: 20px;
     border: 2px solid #e1e8ee;
@@ -894,6 +1016,8 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .fecha-cvv {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    width: 105%;
 }
 
 .mes-tarjeta select, .year-tarjeta select, .cvv input {
@@ -905,16 +1029,25 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     background-position: 85% 50%;
 }
 
-.mes-tarjeta select, .year-tarjeta select {
-    margin-right: 52px;
-}
-
 .mes-tarjeta option, .year-tarjeta option {
     color: #000000;
 }
 
+.cvv input {
+    height: 36px;
+}
+
+.guardar-tarjeta {
+    align-self: flex-start;
+    margin-left: 16px;
+    margin-bottom: 20px;
+}
+
 .metodo-pago-botones {
+    display: flex;
+    flex-direction: column;
     text-align: center;
+    align-items: center;
 }
   
 .boton-paypal, .boton-proceder {
@@ -932,6 +1065,10 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     cursor: pointer;
     color : #ffffff;
     transition: background 0.3s;
+}
+
+.boton-proceder.tarjeta-caducada:hover {
+    background-color: grey;
 }
   
 .boton-paypal a {
@@ -954,6 +1091,126 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 
 .boton-paypal:hover {
     background: url('../img/paypal.svg') no-repeat 82% 56% #0d2b6b;
+}
+
+.tarjeta-guardada {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+}
+
+.tarjeta-guardada img {
+    width: 60px;
+    margin-right: 20px;
+}
+
+.tarjeta-guardada p {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.tarjeta-guardada input[type="radio"] {
+    margin-right: 10px;
+}
+
+.tarjeta-guardada .boton-modificar,
+.tarjeta-guardada .boton-eliminar {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tarjeta-guardada .boton-modificar {
+    background-color: #7dc855;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.tarjeta-guardada .boton-eliminar {
+    background-color: #f44336;
+    transition: background-color 0.3s;
+}
+
+.tarjeta-guardada .boton-modificar:hover {
+    background-color: #5ca634;
+}
+
+.tarjeta-guardada .boton-eliminar:hover {
+    background-color: #da190b;
+}
+
+.modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal .modificar-tarjeta {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 95%;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal h3, .modal .close {
+    margin: 0;
+}
+
+.modal .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: display 0.3s;
+}
+
+.modal .form-modificar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+}
+
+.modal .titular-tarjeta {
+    margin-top: 10px;
+}
+
+.close {
+    color: #aaa;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 /* Estilos del pie de página */

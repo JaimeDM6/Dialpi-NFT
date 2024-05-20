@@ -25,6 +25,7 @@ $title = 'Iniciar sesión';
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['password_usuario'])) {
                 $_SESSION['usuario'] = [
+                    'dni' => $user['dni_usuario'],
                     'nombre' => $user['nombre_usuario'],
                     'apellidos' => $user['apellidos_usuario'],
                     'id' => $user['id_usuario'],
@@ -41,6 +42,7 @@ $title = 'Iniciar sesión';
                 $stmt->execute();
 
                 $_SESSION['usuario'] = [
+                    'dni' => $user['dni_usuario'],
                     'nombre' => $user['nombre_usuario'],
                     'apellidos' => $user['apellidos_usuario'],
                     'id' => $user['id_usuario'],
