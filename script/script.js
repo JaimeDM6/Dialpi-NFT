@@ -1,7 +1,7 @@
 /* HEADER */
 
 var dropdown = document.querySelector('.dropdown');
-if(dropdown) {
+if (dropdown) {
     var dropdownMenu = dropdown.querySelector('.dropdown-menu');
     var dropdownIcon = dropdown.querySelector('i');
 
@@ -18,18 +18,6 @@ if(dropdown) {
                 dropdownMenu.style.display = 'none';
             }, 1000);
         }
-    });
-
-    document.getElementById('logout').addEventListener('click', function(e) {
-        e.preventDefault();
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/logout', true);
-        xhr.onload = function() {
-            if (this.status == 200) {
-                location.reload();
-            }
-        }
-        xhr.send();
     });
 }
 
@@ -164,24 +152,37 @@ window.addEventListener('resize', function() {
     }
 });
 
-document.getElementById('cart-icon').addEventListener('mouseover', function() {
-    document.querySelector('.cart-dropdown').classList.add('show');
-});
+var isMobile = window.matchMedia("only screen and (max-width: 972px)").matches;
 
-document.getElementById('cart-icon').addEventListener('mouseout', function() {
-    document.querySelector('.cart-dropdown').classList.remove('show');
-});
+if (isMobile) {
+    document.getElementById('cart-icon').addEventListener('click', function() {
+        var dropdown = document.querySelector('.cart-dropdown');
+        dropdown.classList.contains('show') ? dropdown.classList.remove('show') : dropdown.classList.add('show');
+    });
+} else {
+    document.getElementById('cart-icon').addEventListener('mouseover', function() {
+        document.querySelector('.cart-dropdown').classList.add('show');
+    });
 
-document.getElementById('logout').addEventListener('click', function(e) {
-    e.preventDefault();
+    document.getElementById('cart-icon').addEventListener('mouseout', function() {
+        document.querySelector('.cart-dropdown').classList.remove('show');
+    });
+}
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/logout', true);
-    xhr.onload = function() {
-        if (this.status == 200) {
-            localStorage.clear();
-            window.location.href = "/";
+var logoutElement = document.getElementById('logout');
+
+if (logoutElement) {
+    logoutElement.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/logout', true);
+        xhr.onload = function() {
+            if (this.status == 200) {
+                localStorage.clear();
+                window.location.href = "/";
+            }
         }
-    }
-    xhr.send();
-});
+        xhr.send();
+    });
+}

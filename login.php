@@ -6,9 +6,15 @@ $title = 'Iniciar sesión';
         exit;
     }
     require_once 'conexion.php';
+    require_once __DIR__ . '/../backend/vendor/autoload.php';
+
+    use \Firebase\JWT\JWT;
+
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+
+    $secret_key = getenv('JWT_SECRET_KEY');
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         $response = array('error' => false, 'message' => '');
@@ -24,6 +30,22 @@ $title = 'Iniciar sesión';
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['password_usuario'])) {
+                $token = array(
+                    "iat" => time(),
+                    "exp" => time() + (60*60),
+                    "data" => array(
+                        "id" => $user['id_usuario'],
+                        "email" => $user['email_usuario'],
+                        "nombre" => $user['nombre_usuario'],
+                        "apellidos" => $user['apellidos_usuario'],
+                        "ruta_perfil" => $user['ruta_perfil']
+                    )
+                );
+
+                $jwt = JWT::encode($token, $secret_key, 'HS256');
+                $response['message'] = 'success';
+                $response['token'] = $jwt;
+
                 $_SESSION['usuario'] = [
                     'dni' => $user['dni_usuario'],
                     'nombre' => $user['nombre_usuario'],
@@ -40,6 +62,22 @@ $title = 'Iniciar sesión';
                 $stmt = $conexion->prepare($sql);
                 $stmt->bind_param("ss", $new_hashed_password, $email);
                 $stmt->execute();
+
+                $token = array(
+                    "iat" => time(),
+                    "exp" => time() + (60*60),
+                    "data" => array(
+                        "id" => $user['id_usuario'],
+                        "email" => $user['email_usuario'],
+                        "nombre" => $user['nombre_usuario'],
+                        "apellidos" => $user['apellidos_usuario'],
+                        "ruta_perfil" => $user['ruta_perfil']
+                    )
+                );
+    
+                $jwt = JWT::encode($token, $secret_key, 'HS256');
+                $response['message'] = 'success';
+                $response['token'] = $jwt;
 
                 $_SESSION['usuario'] = [
                     'dni' => $user['dni_usuario'],
@@ -80,7 +118,7 @@ $title = 'Iniciar sesión';
                 <i class="fas fa-eye" id="toggle-password"></i>
             </div>
             <input type="submit" value="Iniciar sesión">
-            <p>¿No tienes cuenta? <a href="/signup">Regístrate</a></p>
+            <p class="signup-link">¿No tienes cuenta? <a href="/signup">Regístrate</a></p>
         </form>
     </main>
     <?php include 'footer.php'; ?>
@@ -100,6 +138,7 @@ $title = 'Iniciar sesión';
                         $('#error-message').text(response.message);
                         $('html, body').animate({ scrollTop: 0 }, 'fast');
                     } else if (response.message === 'success') {
+                        localStorage.setItem('token', response.token);
                         window.location.href = '/';
                     }
                 }

@@ -85,7 +85,7 @@
                 <i class="fas fa-eye" id="toggle-password-2"></i>
             </div>
             <input type="submit" value="Registrarse">
-            <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+            <p class="signup-link">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
         </form>
     </main>
     <?php include 'footer.php'; ?>

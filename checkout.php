@@ -60,33 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['invitado'])) {
     }
 
     echo json_encode($response);
-    $dni = $_POST['dni'];
-
-    function validar_dni($dni) {
-        $letra = substr($dni, -1);
-        $numeros = substr($dni, 0, -1);
-        return strtoupper($letra) === substr('TRWAGMYFPDXBNJZSQVHLCKE', strtr($numeros, 'XYZ', '012')%23, 1);
-    }
-
-    if (!validar_dni($dni)) {
-        $response['error'] = true;
-        $response['message'] = 'El DNI no es válido.';
-    } else {
-        $_SESSION['invitado'] = [
-            'nombre' => $_POST['nombre'],
-            'apellidos' => $_POST['apellidos'],
-            'dni' => $_POST['dni'],
-            'email' => $_POST['email'],
-            'telefono' => $_POST['telefono'],
-        ];
-
-        $response['message'] = 'success';
-    }
-
-    echo json_encode($response);
     exit;
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion'])) {
     $idUsuario = $_SESSION['usuario']['id'];
@@ -100,11 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion']))
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvitado'])) {
     $_SESSION['invitado'] = [
-        'nombre' => $_SESSION['invitado']['nombre'],
-        'apellidos' => $_SESSION['invitado']['apellidos'],
-        'dni' => $_SESSION['invitado']['dni'],
-        'email' => $_SESSION['invitado']['email'],
-        'telefono' => $_SESSION['invitado']['telefono'],
         'nombre' => $_SESSION['invitado']['nombre'],
         'apellidos' => $_SESSION['invitado']['apellidos'],
         'dni' => $_SESSION['invitado']['dni'],
@@ -141,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
             <h2>Checkout</h2>
             <?php
                 $parametro = array_key_first($_GET);
-                $paso = 0;
 
                 if (!isset($_SESSION['cart'])) {
                     echo "No hay pedidos en el carrito.";
@@ -153,13 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                             <div class="invitado">
                                 <form method="POST" action="/checkout?direccion" class="invitado-form">
                                     <p id="error-message" style="color: red;"></p>
-                                    <p id="error-message" style="color: red;"></p>
                                     <label for="nombre">Nombre:</label><br>
                                     <input type="text" id="nombre" name="nombre" required autocomplete="name"><br>
                                     <label for="apellidos">Apellidos:</label><br>
                                     <input type="text" id="apellidos" name="apellidos" required autocomplete="family-name"><br>
-                                    <label for="dni">DNI:</label><br>
-                                    <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
                                     <label for="dni">DNI:</label><br>
                                     <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
                                     <label for="email">Correo electrónico:</label><br>
@@ -215,11 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                             } else {
                                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     $_SESSION['invitado'] = [
-                                        'nombre' => $_SESSION['invitado']['nombre'],
-                                        'apellidos' => $_SESSION['invitado']['apellidos'],
-                                        'dni' => $_SESSION['invitado']['dni'],
-                                        'email' => $_SESSION['invitado']['email'],
-                                        'telefono' => $_SESSION['invitado']['telefono'],
                                         'nombre' => $_SESSION['invitado']['nombre'],
                                         'apellidos' => $_SESSION['invitado']['apellidos'],
                                         'dni' => $_SESSION['invitado']['dni'],
@@ -429,7 +390,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                             } else {
                                                 echo "<button type='submit' formaction='/procesar-pago' class='boton-proceder' name='boton-proceder-2'>Pagar con tarjeta</button>";
                                             }
-                                            echo "<button class='boton-paypal' name='boton-paypal'><a href='/paypal'>Pagar con</a></button>";
+                                            echo "<a href='/paypal' class='boton-paypal' name='boton-paypal'>Pagar con</a>";
                                             echo "</div>";
                                             echo "</form>";
                                             ?>
@@ -448,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                                                     <?php
                                                                     $caducidad = explode('/', $tarjeta['caducidad_tarjeta']);
                                                                     $mesActual = $caducidad[0];
-                                                                    $meses = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+                                                                    $meses = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
                                                                     for ($i = 1; $i <= 12; $i++) {
                                                                         $mes = str_pad($i, 2, '0', STR_PAD_LEFT);
                                                                         $nombreMes = $meses[$i - 1];
@@ -523,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                                 </div>
                                                 <div class="metodo-pago-botones">
                                                     <button type="submit" class="boton-proceder" name="boton-proceder">Pagar con tarjeta</button>
-                                                    <button class="boton-paypal" name="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                                    <a href="/paypal" class="boton-paypal" name="boton-paypal">Pagar con</a>
                                                 </div>
                                             </form>
                                         <?php
@@ -538,18 +499,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                         <div class="fecha-cvv">
                                             <div class="mes-tarjeta">
                                                 <select name="mes" autocomplete="cc-exp-month" required>
-                                                    <option value="enero">Enero</option>
-                                                    <option value="febrero">Febrero</option>
-                                                    <option value="marzo">Marzo</option>
-                                                    <option value="abril">Abril</option>
-                                                    <option value="mayo">Mayo</option>
-                                                    <option value="junio">Junio</option>
-                                                    <option value="julio">Julio</option>
-                                                    <option value="agosto">Agosto</option>
-                                                    <option value="septiembre">Septiembre</option>
-                                                    <option value="octubre">Octubre</option>
-                                                    <option value="noviembre">Noviembre</option>
-                                                    <option value="diciembre">Diciembre</option>
+                                                    <?php
+                                                    $meses = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+                                                    for ($i = 1; $i <= 12; $i++) {
+                                                        $mes = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                                        $nombreMes = $meses[$i - 1];
+                                                        echo "<option value='$mes'>$nombreMes</option>";
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                             <div class="year-tarjeta">
@@ -568,7 +525,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                                         </div>
                                         <div class="metodo-pago-botones">
                                             <button type="submit" class="boton-proceder" name="boton-proceder">Pagar con tarjeta</button>
-                                            <button class="boton-paypal" name="boton-paypal"><a href="/paypal">Pagar con</a></button>
+                                            <a href="/paypal" class="boton-paypal" name="boton-paypal">Pagar con</a>
                                         </div>
                                     </form>
                                 <?php
@@ -579,36 +536,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                         }
                         break;
                     default:
-                        if ($paso === 0) {
-                            if (isset($_SESSION['cart'])) {
-                                if (isset($_SESSION['usuario']) || isset($_SESSION['invitado'])) {
-                                    header('Location: /checkout?direccion');
-                                    exit;
-                                } else {
-                                    ?>
-                                    <div class="cuenta">
-                                        <div class="cuenta-izq">
-                                            <form method="POST" action="/login" class="login-form checkout-login">
-                                                <p id="error-message" style="color: red;"></p>
-                                                <label for="email">Correo electrónico:</label><br>
-                                                <input type="email" id="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required autocomplete="email"><br>
-                                                <label for="password">Contraseña:</label><br>
-                                                <div class="password-container">
-                                                    <input type="password" id="password" name="password" required autocomplete="current-password">
-                                                    <i class="fas fa-eye" id="toggle-password"></i>
-                                                </div>
-                                                <input type="submit" value="Iniciar sesión">
-                                            </form>
-                                        </div>
-                                        <div class="cuenta-der">
-                                            <a href="/checkout?invitado" class="login-button">Continuar como invitado</a>
-                                        </div>
+                        if (isset($_SESSION['cart'])) {
+                            if (isset($_SESSION['usuario']) || isset($_SESSION['invitado'])) {
+                                header('Location: /checkout?direccion');
+                                exit;
+                            } else {
+                                ?>
+                                <div class="cuenta">
+                                    <div class="cuenta-izq">
+                                        <form method="POST" action="/login" class="login-form checkout-login">
+                                            <p id="error-message" style="color: red;"></p>
+                                            <label for="email">Correo electrónico:</label><br>
+                                            <input type="email" id="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required autocomplete="email"><br>
+                                            <label for="password">Contraseña:</label><br>
+                                            <div class="password-container">
+                                                <input type="password" id="password" name="password" required autocomplete="current-password">
+                                                <i class="fas fa-eye" id="toggle-password"></i>
+                                            </div>
+                                            <input type="submit" value="Iniciar sesión">
+                                        </form>
                                     </div>
-                                    <?php
-                                }
+                                    <div class="cuenta-der">
+                                        <a href="/checkout?invitado" class="login-button">Continuar como invitado</a>
+                                    </div>
+                                </div>
+                                <?php
                             }
                         }
-                        $paso++;
                         break;
                 }
             ?>
@@ -635,7 +589,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                 });
             });
 
-
             $('#eliminar-direccion').on('click', function(e) {
                 e.preventDefault();
             
@@ -653,7 +606,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccionInvi
                     }
                 });
             });
-
 
             $('#eliminar-direccion-invitado').on('click', function(e) {
                 e.preventDefault();

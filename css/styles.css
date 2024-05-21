@@ -77,7 +77,6 @@ header {
 }
 
 nav {
-    margin: auto;
     font-weight: bold;
 }
 
@@ -143,8 +142,36 @@ nav ul li a:hover {
     padding: 0;
 }
 
+.search-form-mobile {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    width: 90%;
+}
+
+.search-form-mobile input {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 5px;
+    padding-left: 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 1em;
+}
+
+.search-form-mobile button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-form-mobile i {
+    color: #ffffff;
+    font-size: 1.5em;
+}
+
 .login {
-    width: 15%;
+    width: 10%;
     display: flex;
     justify-content: center;
 }
@@ -974,8 +1001,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 }
 
 .metodo-pago {
-    width: 100%;
-    max-width: 600px;
+    width: 65%;
     display: flex;
     justify-content: center;
     margin: 0 auto;
@@ -994,9 +1020,9 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     flex-direction: column;
     align-items: center;
 }
-  
-.numero-tarjeta, .titular-tarjeta, .cvv input, .mes-tarjeta select, .boton-paypal, .boton-proceder, .year-tarjeta select {
-    height: 42px;
+
+.mes-tarjeta, .year-tarjeta {
+    flex: 1;
 }
   
 .numero-tarjeta, .titular-tarjeta, .mes-tarjeta select, .year-tarjeta select {
@@ -1008,22 +1034,22 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .numero-tarjeta, .titular-tarjeta {
     width: 100%;
     margin-bottom: 20px;
-    padding-left: 20px;
+    padding: 15px 20px;
     border: 2px solid #e1e8ee;
     border-radius: 6px;
 }
 
 .fecha-cvv {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
-    width: 105%;
+    width: 110%;
 }
 
 .mes-tarjeta select, .year-tarjeta select, .cvv input {
     width: 145px;
     margin-bottom: 20px;
-    padding-left: 20px;
+    padding: 15px 20px;
     border: 2px solid #e1e8ee;
     border-radius: 6px;
     background-position: 85% 50%;
@@ -1031,10 +1057,6 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 
 .mes-tarjeta option, .year-tarjeta option {
     color: #000000;
-}
-
-.cvv input {
-    height: 36px;
 }
 
 .guardar-tarjeta {
@@ -1053,6 +1075,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .boton-paypal, .boton-proceder {
     cursor: pointer;
     width: 200px;
+    padding: 10px;
     border-color: transparent;
     border-radius: 6px;
     font-size: 1em;
@@ -1071,18 +1094,16 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     background-color: grey;
 }
   
-.boton-paypal a {
-    text-decoration: none;
-}
-  
-.boton-paypal a {
-    color : #ffffff;
-}
-  
 .boton-paypal {
-    padding-right: 80px;
+    color: #ffffff;
+    text-decoration: none;
+    padding-right: 90px;
     background: url('../img/paypal.svg') no-repeat 82% 56% #113984;
     transition: background 0.3s;
+}
+
+a.boton-paypal {
+    width: 100px;
 }
 
 .boton-proceder:hover {
@@ -1112,7 +1133,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .tarjeta-guardada p {
     margin: 0;
     padding: 0;
-    font-size: 16px;
+    font-size: 1em;
     color: #333;
 }
 
@@ -1202,7 +1223,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .close {
     color: #aaa;
     cursor: pointer;
-    font-size: 28px;
+    font-size: 1.75em;
     font-weight: bold;
     transition: color 0.3s;
 }
@@ -1211,6 +1232,14 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.procesar-pago {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
 }
 
 /* Estilos del pie de página */
@@ -1462,6 +1491,24 @@ fieldset {
         margin: 5px 0;
     }
 
+    #cart-icon {
+        display: flex;
+        align-items: center;
+        margin-right: 25px;
+        font-size: 1.2em;
+    }
+
+    .cart-count {
+        top: 11px;
+        width: 18px;
+        height: 18px;
+        font-size: 0.7em;
+    }
+
+    .cart-dropdown {
+        top: 20px;
+    }
+
     .dropdown-menu-button .bar {
         display: block;
         width: 25px;
@@ -1571,6 +1618,92 @@ fieldset {
         object-fit: cover;
         object-position: center;
     }
+
+    .collection-cover img {
+        height: 200px;
+    }
+
+    .nft-box a img, .nft-box-disabled a img {
+        height: 200px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .cuenta {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .cuenta-izq, .invitado-form, .direccion-form, .direccion, .metodo-pago, .tarjeta-credito {
+        width: 80%;
+    }
+
+    .cuenta-der {
+        margin: 30px;
+    }
+
+    .boton-derecha {
+        margin-top: 20px;
+        margin-right: 15px;
+    }
+
+    .tarjeta-guardada {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tarjeta-guardada img {
+        margin-right: 0px;
+        margin-bottom: 10px;
+    }
+
+    .tarjeta-guardada p {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .tarjeta-guardada .boton-modificar {
+        margin-right: 0px;
+        margin-bottom: 8px;
+        margin-top: 15px;
+    }
+    
+    .modal .modal-content {
+        width: 70%;
+    }
+
+    .modal .form-modificar {
+        width: 80%;
+    }
+
+    .fecha-cvv {
+        width: 125%;
+    }
+
+    .cvv {
+        flex-basis: 100%;
+        text-align: center;
+    }
+
+    .mes-tarjeta, .year-tarjeta {
+        text-align: center;
+    }
+
+    .mes-tarjeta select, .year-tarjeta select {
+        background-color: #ffffff;
+        width: 120px;
+    }
+
+    .cvv input {
+        width: 100px;
+    }
+
+    .tarjeta-guardada .boton-modificar, .tarjeta-guardada .boton-eliminar {
+        border-radius: 5px;
+        font-size: 1em;
+    }
 }
 
 /* Media queries para la barra de búsqueda */
@@ -1581,25 +1714,14 @@ fieldset {
         justify-content: space-between;
     }
 
-    .logo {
-        margin-right: 30px;
-    }
-
     .search-form {
         display: none;
-    }
-
-    .search-icon {
-        margin-left: 20px;
     }
     
     .search-icon, nav {
         display: inline-block;
     }
 
-    .login {
-        margin-left: 30px;
-    }
 }
 
 /* Media queries para la barra de búsqueda */
@@ -1654,6 +1776,10 @@ fieldset {
         font-size: 1.75em;
     }
 
+    .container-header {
+        font-size: 1.2em;
+    }
+
     nav ul {
         display: flex;
         flex-direction: row;
@@ -1670,6 +1796,24 @@ fieldset {
 
     .search-icon {
         display: none;
+    }
+
+    .search-form button[type="submit"] {
+        padding: 9px 15px;
+        border-radius: 5px;
+        font-size: 0.8em;
+    }
+
+    #cart-icon {
+        font-size: 1.3em;
+    }
+
+    .cart-count {
+        top: -18px;
+        right: -18px;
+        width: 25px;
+        height: 25px;
+        font-size: 0.8em;
     }
 }
 
@@ -1694,8 +1838,21 @@ fieldset {
         font-size: 2em;
     }
 
+    .container-header {
+        font-size: 1.3em;
+        height: 150px;
+    }
+
+    .container-header-centered {
+        height: 150px;
+    }
+
     .logo h1 {
-        font-size: 2em;
+        font-size: 3em;
+    }
+
+    .logo img {
+        width: 150px;
     }
 
     nav ul li a {
@@ -1716,34 +1873,135 @@ fieldset {
         font-size: 1.5em;
     }
 
-    .login-button {
-        padding: 15px 30px;
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+        margin-right: 20px;
+    }
+
+    .cart-count {
+        top: -40px;
+        right: -40px;
+        width: 50px;
+        height: 50px;
+        font-size: 0.8em;
+    }
+
+    #cart-icon {
+        font-size: 2em;
+    }
+
+    .cart-dropdown {
+        border-radius: 20px;
+        padding: 25px;
+        width: 25em;
+    }
+
+    .cart-item {
+        width: 129%;
+        margin-top: 20px;
+    }
+
+    .cart-item img {
+        width: 200px;
+        height: 200px;
+        margin-right: 50px;
+        border-radius: 20px;
+    }
+
+    .cart-item-2 img {
+        width: 200px;
+        height: 200px;
+        border-radius: 15px;
+    }
+    
+    tr {
         font-size: 1.5em;
     }
 
-    .volver {
+    .price-header {
+        padding-right: 100px;
+    }
+
+    .cart-total {
         font-size: 2em;
     }
 
+    .cart-items {
+        font-size: 1.5em;
+    }
+
+    .cart-total-2 {
+        font-size: 2.1em;
+    }
+
+    .cart-buttons {
+        font-size: 1.4em;
+    }
+
+    a.cart-button, a.checkout-button {
+        padding: 20px 30px;
+        border-radius: 10px;
+        font-size: 1em;
+    }
+
+    .checkout-button-container {
+        gap: 30px;
+    }
+
+    .login-button {
+        padding: 15px 30px;
+        font-size: 1.8em;
+    }
+
+    .volver {
+        font-size: 3em;
+        margin-left: 40px;
+    }
+
     .login-form {
-        font-size: 2em;
+        font-size: 1.5em;
+        padding: 50px;
+    }
+
+    .login-form label {
+        font-size: 1.7em;
     }
 
     .login-form input[type="text"], .login-form input[type="email"], .login-form input[type="password"] {
         padding: 25px;
-        border-radius: 10px;
+        border-radius: 15px;
         margin-bottom: 20px;
-        font-size: 2em;
+        font-size: 1.3em;
+    }
+
+    .login-form input[type="text"]::placeholder, .login-form input[type="email"]::placeholder, .login-form input[type="password"]::placeholder {
+        font-size: 1.5em;
     }
 
     .login-form input[type="submit"] {
         padding: 25px 20px;
         border-radius: 15px;
-        font-size: 2em;
+        font-size: 1.5em;
+    }
+
+    .password-container {
+        margin-bottom: 20px;
     }
 
     #toggle-password, #toggle-password-2 {
         right: 30px;
+        font-size: 1.5em;
+    }
+
+    form.login-form.checkout-login {
+        width: 80%;
+        border-radius: 15px;
+        font-size: 1em;
+    }
+
+    .signup-link {
+        font-size: 1.8em;
     }
 
     .collection-grid {
@@ -1765,5 +2023,218 @@ fieldset {
 
     .dropdown a {
         font-size: 1em;
+    }
+
+    .dropdown-menu {
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .error-header {
+        padding: 10px;
+        border-radius: 10px;
+        top: 20px;
+        font-size: 2.5em;
+    }
+
+    .message-header {
+        padding: 10px;
+        border-radius: 10px;
+        top: 20px;
+        font-size: 2.5em;
+    }
+
+    .collection-cover img {
+        height: 600px;
+    }
+
+    .collection-info {
+        padding-left: 50px;
+    }
+
+    .nft-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-gap: 50px;
+    }
+
+    .nft-box {
+        border-radius: 20px;
+    }
+
+    .add-to-cart {
+        border-radius: 8px;
+        font-size: 0.8em;
+    }
+
+    .add-to-cart i {
+        margin-right: 10px;
+    }
+
+    .direccion {
+        border-radius: 10px;
+        padding: 50px;
+    }
+
+    .direccion h3 {
+        font-size: 1.8em;
+        margin: 20px auto;
+    }
+
+    .direccion button {
+        border-radius: 10px;
+        padding: 20px 30px;
+        font-size: 1.3em;
+    }
+
+    .siguiente {
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-size: 1.4em;
+    }
+
+    .direccion-form {
+        padding: 50px;
+        border-radius: 15px;
+    }
+
+    .direccion-form h3 {
+        font-size: 1.8em;
+        margin: 30px auto;
+    }
+
+    .direccion-form label {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+
+    .direccion-form input[type="text"], .direccion-form select {
+        padding: 25px;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+    }
+
+    .direccion-form a, .direccion-form input[type="submit"] {
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+    }
+
+    .direccion-button {
+        margin-top: 20px;
+    }
+
+    .invitado-form {
+        font-size: 1.5em;
+        padding: 50px;
+    }
+
+    .invitado-form input[type="text"], .invitado-form input[type="email"], .invitado-form input[type="tel"] {
+        padding: 30px;
+        margin-bottom: 25px;
+        border-radius: 10px;
+        font-size: 0.8em;
+    }
+
+    .invitado-form input[type="submit"] {
+        padding: 20px 30px;
+        border-radius: 10px;
+        margin-top: 40px;
+        font-size: 1em;
+    }
+
+    .tarjeta-credito h3, .metodo-pago h3 {
+        margin-bottom: 40px;
+    }
+
+    .tarjeta-credito {
+        width: 70%;
+        font-size: 1.5em;
+    }
+
+    .numero-tarjeta, .titular-tarjeta {
+        margin-bottom: 40px;
+        border-radius: 15px;
+        padding: 20px 40px;
+    }
+
+    .mes-tarjeta select, .year-tarjeta select, .cvv input {
+        width: 250px;
+        border-radius: 15px;
+        padding: 30px 40px;
+    }
+
+    input.cvv-input {
+        height: 40px;
+        font-size: 0.8em;
+    }
+
+    .tarjeta-guardada {
+        padding: 30px 40px;
+        border-radius: 15px;
+        width: 100%;
+    }
+
+    .tarjeta-guardada  {
+        font-size: 0.8em;
+    }
+
+    .tarjeta-guardada img {
+        width: 100px;
+        margin-right: 50px;
+    }
+
+    .tarjeta-guardada .boton-modificar, .tarjeta-guardada .boton-eliminar {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 0.8em;
+    }
+
+    .modal .modal-content {
+        padding: 40px;
+        border-radius: 20px;
+    }
+
+    .fecha-cvv {
+        width: 105%;
+    }
+
+    .metodo-pago-botones {
+        margin-top: 40px;
+        font-size: 0.8em;
+    }
+
+    .boton-proceder {
+        margin-bottom: 20px;
+    }
+
+    .boton-paypal, .boton-proceder {
+        width: 500px;
+        padding: 15px;
+        border-radius: 15px;
+        font-size: 1em;
+    }
+
+    a.boton-paypal {
+        width: 300px;
+    }
+
+    .boton-paypal {
+        padding-right: 180px;
+        background: url(../img/paypal.svg) no-repeat 78% 62% #113984;
+        transition: background 0.3s;
+        background-size: 150px;
+    }
+
+    .boton-paypal:hover {
+        background: url('../img/paypal.svg') no-repeat 78% 62% #0d2b6b;
+    }
+
+    .error-404 {
+        font-size: 2em;
+    }
+
+    .procesar-pago {
+        font-size: 2em;
     }
 }

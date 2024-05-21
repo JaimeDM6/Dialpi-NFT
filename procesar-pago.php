@@ -72,8 +72,6 @@ include 'head.php';
 
 $numeroFactura = null;
 
-$numeroFactura = null;
-
 if (isset($_SESSION['pago_realizado'])) {
     do {
         $numeroFactura = generarNumeroFactura();
@@ -139,7 +137,7 @@ if (isset($_SESSION['pago_realizado'])) {
         $stmt->execute();
     }
 
-    echo "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;'>";
+    echo "<div class='procesar-pago'>";
     echo "<h1>Procesando pago...</h1>";
     echo "<img src='img/procesando.gif' alt='Procesando...' height=100>";
     echo "</div>";
@@ -156,12 +154,6 @@ if (isset($_GET['confirmar'])) {
     include 'header-center.php';
     ?>
     <main>
-        <div class="error-404">
-            <h1>El pago se ha realizado correctamente.</h1>
-            <h2>Número de pedido <?php echo $numeroFactura; ?></h2>
-            <a href="/certificado" target="_blank">Pulsa aquí para descargar tu certificado.</a><br>
-            <img src="/img/exito.png" alt="Éxito">
-            <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         <div class="error-404">
             <h1>El pago se ha realizado correctamente.</h1>
             <h2>Número de pedido <?php echo $numeroFactura; ?></h2>
