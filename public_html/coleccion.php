@@ -130,8 +130,8 @@
                                 messageHeader.css('opacity', '0');
                                 setTimeout(function() {
                                 location.reload();
-                                }, 500);
-                            }, 3000);
+                                }, 200);
+                            }, 2000);
                         }
                     }
                 });

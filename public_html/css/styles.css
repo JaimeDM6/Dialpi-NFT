@@ -147,10 +147,12 @@ nav ul li a:hover {
     align-items: center;
     margin: 10px 0;
     width: 90%;
+    padding: 0 20px;
 }
 
 .search-form-mobile input {
     flex-grow: 1;
+    width: 70%;
     margin-right: 10px;
     padding: 5px;
     padding-left: 15px;

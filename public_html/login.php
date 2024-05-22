@@ -1,10 +1,7 @@
 
 <?php
 session_start();
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
+include __DIR__ . '/../includes/functions.php';
 include __DIR__ . '/../includes/head.php';
     include __DIR__ . '/../includes/header-center.php';
     ?>

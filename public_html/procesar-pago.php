@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['boton-proceder'])) {
         echo "La tarjeta ha caducado";
     } else {
         $_SESSION['pago_realizado'] = true;
+        unset($_SESSION['checkout']);
     }
 }
 
@@ -57,12 +58,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['btnLogin'])) {
 }
 
 if (isset($_GET['procesado'])) {
+    unset($_SESSION['cart']);
+    unset($_SESSION['numero_factura']);
+    unset($_SESSION['pago_realizado']);
+    unset($_SESSION['pago_confirmado']);
+
     if (isset($_SESSION['invitado'])) {
         unset($_SESSION['invitado']);
-    }
-
-    if (isset($_SESSION['cart'])) {
-        unset($_SESSION['cart']);
     }
 
     header('Location: /');
@@ -71,11 +73,12 @@ if (isset($_GET['procesado'])) {
 
 include __DIR__ . '/../includes/head.php';
 
-$numeroFactura = null;
+if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) {
+    $_SESSION['pago_confirmado'] = true;
 
-if (isset($_SESSION['pago_realizado'])) {
     do {
         $numeroFactura = generarNumeroFactura();
+        $_SESSION['numero_factura'] = $numeroFactura;
     } while (facturaExiste($numeroFactura, $conexion));
     
     if (isset($_SESSION['usuario'])) {
@@ -138,17 +141,20 @@ if (isset($_SESSION['pago_realizado'])) {
         $stmt->execute();
     }
 
-    echo "<div class='procesar-pago'>";
-    echo "<h1>Procesando pago...</h1>";
-    echo "<img src='img/procesando.gif' alt='Procesando...' height=100>";
-    echo "</div>";
-
-    echo "<script>
+    ?>
+    <div class="procesar-pago">
+        <h1>Procesando pago...</h1>
+        <img src="/img/procesando.gif" alt="Procesando..." height=100>
+    </div>
+    <script>
         setTimeout(function() {
             location.href = '/procesar-pago?confirmar';
         }, 5000);
-    </script>";
-    unset($_SESSION['pago_realizado']);
+    </script>
+    <?php
+} else {
+    header('Location: /carrito');
+    exit;
 }
 
 if (isset($_GET['confirmar'])) {
@@ -157,16 +163,15 @@ if (isset($_GET['confirmar'])) {
     <main>
         <div class="error-404">
             <h1>El pago se ha realizado correctamente.</h1>
-            <h2>Número de pedido <?php echo $numeroFactura; ?></h2>
+            <h2>Número de pedido: <?php echo $_SESSION['numero_factura']; ?></h2>
             <a href="/certificado" target="_blank">Pulsa aquí para descargar tu certificado.</a><br>
             <img src="/img/exito.png" alt="Éxito">
             <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         </div>
     </main>
-    <?php include __DIR__ . '/../includes/footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php';
+}
+?>
     <script src="script/script.js"></script>
 </body>
 </html>
-<?php
-}
-?>

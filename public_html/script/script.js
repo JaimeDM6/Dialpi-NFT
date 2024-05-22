@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var isMobile = window.matchMedia("only screen and (max-width: 972px)").matches;
 
     if (isMobile) {
-        document.getElementById('cart-icon').addEventListener('touchend', function() {
+        document.getElementById('cart-icon').addEventListener('click', function() {
             var dropdown = document.querySelector('.cart-dropdown');
             dropdown.classList.contains('show') ? dropdown.classList.remove('show') : dropdown.classList.add('show');
         });
