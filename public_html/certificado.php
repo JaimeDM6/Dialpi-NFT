@@ -65,15 +65,69 @@ if (isset($_SESSION['invitado'])) {
 
 $pdf->SetFont('helvetica', '', 12);
 
-$día = date('j');
-$meses = array(1=>'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
-$mes = $meses[date('n')];
-$year = date('Y');
-
 $text = "Don JAVIER GÓMEZ MARTÍNEZ, con DNI 465496745-K, en calidad de Gerente de la empresa Dialpi NFT, con NIF 77785369-W y domicilio fiscal en la CALLE DE ALCALÁ, 100 28009 MADRID (ESPAÑA).\n\n\nCERTIFICA:\nQue el NFT cuyo detalle se especifica a continuación, ha sido obtenida por $nombre $apellidos, con DNI $dni y por lo tanto es el/la propietario/a legítimo/a de la misma.\n\n";
 $pdf->MultiCell(0, 10, $text, 0, 'J', 0, 1, '', '', true);
 
-if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+$dia = '';
+$mes = '';
+$year = '';
+$token = '';
+
+if (isset($_GET['id'])) {
+    $productId = $_GET['id'];
+    $query = "SELECT * FROM NFT WHERE id_nft = ?";
+    $stmt = $conexion->prepare($query);
+    $stmt->bind_param('i', $productId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $query2 = "SELECT nombre_coleccion FROM Coleccion_NFT WHERE id_coleccion = ?";
+        $stmt2 = $conexion->prepare($query2);
+        $stmt2->bind_param('i', $row["coleccion"]);
+        $stmt2->execute();
+        $result2 = $stmt2->get_result();
+        $row2 = $result2->fetch_assoc();
+
+        $usuario_id = $_SESSION['usuario']['id'];
+        $nft_id = $row['id_nft'];
+        $token = $row['token_nft'];
+        
+        $query2 = "SELECT Pedidos_NFT.id_pedido, Pedidos_NFT.fecha_pedido 
+                  FROM Pedidos_NFT 
+                  INNER JOIN Detalle_Pedido ON Pedidos_NFT.id_pedido = Detalle_Pedido.id_pedido 
+                  WHERE Pedidos_NFT.id_usuario = ? AND Detalle_Pedido.id_nft = ?";
+
+        $stmt3 = $conexion->prepare($query2);
+        $stmt3->bind_param('ii', $usuario_id, $nft_id);
+        $stmt3->execute();
+        $result3 = $stmt3->get_result();
+        
+        if ($result3->num_rows > 0) {
+            $row3 = $result3->fetch_assoc();
+            $fecha_pedido = new DateTime($row3['fecha_pedido']);
+        
+            $dia = $fecha_pedido->format('d');
+            $meses = array(1=>'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+            $mes = $meses[$fecha_pedido->format('n')];
+            $year = $fecha_pedido->format('Y');
+        }
+
+        $y = $pdf->GetY();
+        
+        $pdf->Line(25, $y, $pdf->GetPageWidth() - 25, $y);
+        $pdf->Image('img/colecciones/' . $row2["nombre_coleccion"] . '/' . $row["nombre_nft"] . '.png', 25, $y, 20, 20);
+        
+        $centerY = $y + 10;
+
+        $pdf->SetXY(50, $centerY - 5);
+        $pdf->Cell(70, 10, ucfirst($row["nombre_nft"]), 0, 0, 'L', false);
+        $pdf->Cell(0, 10, $row["precio"] . ' ETH', 0, 1, 'R', false);
+        $pdf->Line(25, $y + 20, $pdf->GetPageWidth() - 25, $y + 20);
+        $pdf->SetY($y + 30);
+    }
+} else if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     foreach ($_SESSION['cart'] as $productId) {
         $query = "SELECT * FROM NFT WHERE id_nft = ?";
         $stmt = $conexion->prepare($query);
@@ -104,9 +158,14 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
             $pdf->SetY($y + 30);
         }
     }
+
+    $dia = date('j');
+    $meses = array(1=>'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+    $mes = $meses[date('n')];
+    $year = date('Y');
 }
 
-$text = "En Madrid, a $día de $mes de $year.\n\n\n";
+$text = "En Madrid, a $dia de $mes de $year.\n\n\n";
 $pdf->MultiCell(0, 10, $text, 0, 'R', 0, 1, '', '', true);
 
 $text = "Firmado, Don JAVIER GÓMEZ MARTÍNEZ\n\n\n\n\n";
@@ -127,4 +186,10 @@ $pdf->SetY($y + 20);
 $text = "Gerente de Dialpi NFT.";
 $pdf->MultiCell(0, 10, $text, 0, 'L', 0, 1, '', '', true);
 
-$pdf->Output('certificado-NFT.pdf', 'D');
+if (isset($_SESSION['numero_factura'])) {
+    $nombreArchivo = 'certificado-NFT-' . $_SESSION['numero_factura'] . '.pdf';
+} else {
+    $nombreArchivo = 'certificado-NFT-' . $token . '.pdf';
+}
+
+$pdf->Output($nombreArchivo, 'D');

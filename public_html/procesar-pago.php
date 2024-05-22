@@ -152,12 +152,7 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
         }, 5000);
     </script>
     <?php
-} else {
-    header('Location: /carrito');
-    exit;
-}
-
-if (isset($_GET['confirmar'])) {
+} elseif (isset($_GET['confirmar'])) {
     include __DIR__ . '/../includes/header-center.php';
     ?>
     <main>
@@ -169,7 +164,11 @@ if (isset($_GET['confirmar'])) {
             <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         </div>
     </main>
-    <?php include __DIR__ . '/../includes/footer.php';
+    <?php
+    include __DIR__ . '/../includes/footer.php';
+} else {
+    header('Location: /carrito');
+    exit;
 }
 ?>
     <script src="script/script.js"></script>

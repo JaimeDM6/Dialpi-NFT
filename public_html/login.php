@@ -21,7 +21,7 @@ include __DIR__ . '/../includes/head.php';
             <p class="signup-link">¿No tienes cuenta? <a href="/signup">Regístrate</a></p>
         </form>
     </main>
-    <?php include 'footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
     $(document).ready(function(){

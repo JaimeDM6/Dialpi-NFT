@@ -6,6 +6,20 @@ require_once __DIR__ . '/../includes/functions.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+if (isset($_SESSION['pago_realizado'])) {
+    unset($_SESSION['cart']);
+    unset($_SESSION['numero_factura']);
+    unset($_SESSION['pago_realizado']);
+    unset($_SESSION['pago_confirmado']);
+
+    if (isset($_SESSION['invitado'])) {
+        unset($_SESSION['invitado']);
+    }
+    
+    exit;
+}
+
 include __DIR__ . '/../includes/head.php';
     include __DIR__ . '/../includes/header.php';
     ?>

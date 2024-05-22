@@ -1,4 +1,6 @@
-<?php $title = 'Dialpi NFT'; ?>
+<?php 
+$title = $title ?? 'Dialpi NFT'; 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
