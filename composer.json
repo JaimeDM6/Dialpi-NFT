@@ -1,0 +1,20 @@
+{
+    "name": "nftdialpi/nft-project",
+    "description": "Compra y vende NFTs de manera rápida y sencilla",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nftdialpi\\NftProject\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dialpi NFT"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "stripe/stripe-php": "^14.7"
+    }
+}

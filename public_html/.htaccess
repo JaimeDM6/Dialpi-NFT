@@ -1,0 +1,39 @@
+RewriteEngine On
+
+# Redirección permanente a HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Eliminar la extensión .php de las URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Eliminar la extensión .html de las URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+# Redirigir las solicitudes directas de archivos .php o .html a la versión sin extensión
+RewriteCond %{THE_REQUEST} /([^.]+)\.(php|html) [NC]
+RewriteRule ^ /%1 [NC,L,R]
+
+# Bloqueo de acceso a archivos sensibles
+<FilesMatch "\.(htaccess|htpasswd|ini|phar|sh|log|sql|bak|config)$">
+    Require all denied
+</FilesMatch>
+
+# Desactivar índices
+Options -Indexes
+
+# Páginas de error
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
