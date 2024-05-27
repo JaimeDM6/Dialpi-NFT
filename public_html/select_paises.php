@@ -1,17 +1,11 @@
 <select name="pais" id="pais">
     <?php
-    if (isset($_SESSION['usuario'])) {
-    ?>
-        <option value="<?= $direccion['pais_usuario'] ?>" selected><?= $direccion['pais_usuario'] ?></option>
-    <?php
-    } else if (isset($_SESSION['invitado']['direccion'])) {
-    ?>
-        <option value="<?= $_SESSION['invitado']['pais'] ?>" selected><?= $_SESSION['invitado']['pais'] ?></option>
-    <?php
+    if ($_SESSION['usuario']['direccion'] !== NULL && isset($_SESSION['usuario'])) {
+        echo '<option value="' . $direccion['pais_usuario'] . '" selected>' . $direccion['pais_usuario'] . '</option>';
+    } else if ($_SESSION['invitado']['direccion'] !== NULL && isset($_SESSION['invitado'])) {
+        echo '<option value="' . $_SESSION['invitado']['pais'] . '" selected>' . $_SESSION['invitado']['pais'] . '</option>';
     } else {
-    ?>
-        <option value="" selected disabled hidden>-- Seleccione un país --</option>
-    <?php
+        echo '<option value="" selected disabled hidden>-- Seleccione un país --</option>';
     }
     ?>
     <option value="Afganistán">Afganistán</option>

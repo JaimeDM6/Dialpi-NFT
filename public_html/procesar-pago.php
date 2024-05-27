@@ -108,6 +108,10 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
         $stmt = mysqli_prepare($conexion, $sql);
         mysqli_stmt_bind_param($stmt, "i", $productId);
         $result = mysqli_stmt_execute($stmt);
+
+        $stmt = $conexion->prepare("UPDATE NFT SET propietario_id = ? WHERE id_nft = ?");
+        $stmt->bind_param("ii", $_SESSION['usuario']['id'], $productId);
+        $stmt->execute();
     }
 
     if (isset($_SESSION['usuario'])) {
@@ -152,12 +156,7 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
         }, 5000);
     </script>
     <?php
-} else {
-    header('Location: /carrito');
-    exit;
-}
-
-if (isset($_GET['confirmar'])) {
+} elseif (isset($_GET['confirmar'])) {
     include __DIR__ . '/../includes/header-center.php';
     ?>
     <main>
@@ -169,7 +168,11 @@ if (isset($_GET['confirmar'])) {
             <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         </div>
     </main>
-    <?php include __DIR__ . '/../includes/footer.php';
+    <?php
+    include __DIR__ . '/../includes/footer.php';
+} else {
+    header('Location: /carrito');
+    exit;
 }
 ?>
     <script src="script/script.js"></script>

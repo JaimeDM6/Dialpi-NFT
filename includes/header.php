@@ -165,7 +165,7 @@
                         <a class="dropdown-toggle">Mi Perfil&nbsp;&nbsp;<i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu-mobile-2">
                             <a href="/cuenta"><li>Cuenta</li></a>
-                            <a href="/mis_nft"><li>Mis NFT</li></a>
+                            <a href="/mis-nft"><li>Mis NFT</li></a>
                             <a href="#" id="logout"><li>Cerrar sesión</li></a>
                         </ul>
                     </li>

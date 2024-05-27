@@ -1,7 +1,7 @@
 <?php
 $title = 'Error 404';
-include 'head.php';
-    include 'header-center.php';
+include __DIR__ . '/../includes/head.php';
+    include __DIR__ . '/../includes/header-center.php';
     ?>
     <main>
         <div class="error-404">
@@ -11,6 +11,6 @@ include 'head.php';
             <p>Es mejor que vuelvas a <a href="/">un lugar más tranquilo.</a></p>
         </div>
     </main>
-    <?php include 'footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 </html>
