@@ -57,8 +57,9 @@ include __DIR__ . '/../includes/head.php';
                             
                             $ruta_perfil = isset($_SESSION['ruta_perfil']) && $_SESSION['ruta_perfil'] != '' ? $_SESSION['ruta_perfil'] : '/img/perfil.png';
                             
+                                echo '<div class="perfil">';
                                 echo '<div style="text-align: center;">';
-                                echo '<img src="' . $ruta_perfil . '" alt="Imagen de perfil" style="width: 200px; height: 200px; border-radius: 50%;">';
+                                echo '<img src="' . $ruta_perfil . '" alt="Imagen de perfil">';
                                 echo '<h1>' . $nombre . ' ' . $apellidos . '</h1>';
                                 echo '</div>';
                                 
@@ -66,6 +67,7 @@ include __DIR__ . '/../includes/head.php';
                                 echo '<p><strong>DNI:</strong> ' . $dni . '</p>';
                                 echo '<p><strong>Correo electrónico:</strong> ' . $correo . '</p>';
                                 echo '<p><strong>Teléfono:</strong> ' . $telefono . '</p>';
+                                echo '</div>';
                                 echo '</div>';
 
                             break;
@@ -188,7 +190,6 @@ include __DIR__ . '/../includes/head.php';
                                     $response['error'] = true;
                                     $response['message'] = 'Las contraseñas no coinciden.';
                                 } else {
-                                    // Aquí deberías actualizar la contraseña en la base de datos
                                     $new_password_hashed = password_hash($new_password, PASSWORD_DEFAULT);
                                     $update_sql = "UPDATE Usuarios SET password_usuario = ? WHERE id_usuario = ?";
                                     $update_stmt = $conexion->prepare($update_sql);
@@ -208,28 +209,30 @@ include __DIR__ . '/../includes/head.php';
                             echo json_encode($response);
                             exit;
                         } ?>
-                        <form method="POST" action="" class="login-form">
-                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                            <p id="error-message" style="color: red;"></p>
-                            <label for="current-password">Contraseña actual:</label><br>
-                            <div class="password-container">
-                                <input type="password" id="current-password" name="current-password" required autocomplete="off">
-                                <i class="fas fa-eye" id="toggle-current-password"></i>
-                            </div>
-                            
-                            <label for="new-password">Nueva contraseña:</label><br>
-                            <div class="password-container">
-                                <input type="password" id="new-password" name="new-password" required autocomplete="new-password">
-                                <i class="fas fa-eye" id="toggle-new-password"></i>
-                            </div>
-                            
-                            <label for="confirm-password">Confirmar contraseña:</label><br>
-                            <div class="password-container">
-                                <input type="password" id="confirm-password" name="confirm-password" required autocomplete="new-password">
-                                <i class="fas fa-eye" id="toggle-confirm-password"></i>
-                            </div>
-                            <input type="submit" value="Cambiar contraseña">
-                        </form>
+                        <div class="seguridad">
+                            <form method="POST" action="" class="login-form">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                                <p id="error-message" style="color: red;"></p>
+                                <label for="current-password">Contraseña actual:</label><br>
+                                <div class="password-container">
+                                    <input type="password" id="current-password" name="current-password" required autocomplete="off">
+                                    <i class="fas fa-eye" id="toggle-current-password"></i>
+                                </div>
+                                
+                                <label for="new-password">Nueva contraseña:</label><br>
+                                <div class="password-container">
+                                    <input type="password" id="new-password" name="new-password" required autocomplete="new-password">
+                                    <i class="fas fa-eye" id="toggle-new-password"></i>
+                                </div>
+                                
+                                <label for="confirm-password">Confirmar contraseña:</label><br>
+                                <div class="password-container">
+                                    <input type="password" id="confirm-password" name="confirm-password" required autocomplete="new-password">
+                                    <i class="fas fa-eye" id="toggle-confirm-password"></i>
+                                </div>
+                                <input type="submit" value="Cambiar contraseña">
+                            </form>
+                        </div>
             <?php
                         break;
                     case 'metodo-pago':

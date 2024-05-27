@@ -54,14 +54,10 @@ include __DIR__ . '/../includes/header.php';
         <?php if (isset($nft)): ?>
             <form action="/procesar-venta" method="post" enctype="multipart/form-data" class="login-form">
                 <input type="hidden" name="nft_id" value="<?php echo $nft_id; ?>">
-                <div>
-                    <label class="vender-label" for="certificado">Subir certificado:</label>
-                    <input type="file" id="certificado" name="certificado" required>
-                </div>
-                <div>
-                    <label class="vender-label" for="precio_venta">Precio de venta:</label>
-                    <p class="vender-nft" id="precio_venta"><?php echo $precio_venta; ?> ETH</p>
-                </div>
+                <label class="vender-label" for="certificado">Subir certificado:</label>
+                <input type="file" id="certificado" name="certificado" required>
+                <label class="vender-label" for="precio_venta">Precio de venta:</label>
+                <p class="vender-nft" id="precio_venta"><?php echo $precio_venta; ?> ETH</p>
                 <input type="submit" value="Vender NFT">
             </form>
         <?php endif; ?>

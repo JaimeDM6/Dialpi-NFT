@@ -36,7 +36,7 @@ include __DIR__ . '/../includes/head.php';
                             <?php echo '<img src="img/colecciones/' . $nft["nombre_coleccion"] . '/' . $nft["nombre_nft"] . '.png" alt="' . $nft["nombre_nft"] . '">'; ?>
                             <p class="nft-name"><?php echo ucfirst($nft["nombre_nft"]); ?></p>
                             <p><span class="nft-label">Precio de compra:</span> <span class="nft-value"><?php echo $nft["precio"]; ?> ETH</span></p>
-                            <a href="/certificado?id=<?php echo $nft['id_nft']; ?>" target="_blank">Descargar Certificado</a>
+                            <a href="/certificado?id=<?php echo $nft['id_nft']; ?>" target="_blank">Descargar Certificado</a><br>
                             <a href="/vender-nft?id=<?php echo $nft['id_nft']; ?>" class="boton-vender">Vender NFT</a>
                         </div>
                     <?php endforeach; ?>

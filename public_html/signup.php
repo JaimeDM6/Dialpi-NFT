@@ -61,8 +61,8 @@
         exit;
     }
 ?>
-<?php include 'head.php'; ?>
-<?php include 'header-center.php'; ?>
+<?php include __DIR__ . '/../includes/head.php'; ?>
+<?php include __DIR__ . '/../includes/header-center.php'; ?>
     <main>
         <a href="javascript:history.back()" class="volver"><i class="fa-solid fa-arrow-left-long"></i>&nbsp;&nbsp;Volver</a><br><br>
         <form method="POST" action="/signup" class="login-form">
@@ -89,7 +89,7 @@
             <p class="signup-link">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
         </form>
     </main>
-    <?php include 'footer.php'; ?>
+    <?php include __DIR__ . '/../includes/footer.php'; ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
     $(document).ready(function(){
