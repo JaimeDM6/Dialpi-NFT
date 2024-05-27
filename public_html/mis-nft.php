@@ -28,7 +28,7 @@ include __DIR__ . '/../includes/head.php';
         <div class="container">
             <h2>Mis NFT</h2>
             <?php if (empty($nfts)): ?>
-                <p>Actualmente no tienes NFTs comprados.</p>
+                <p>Todavía no has comprado ningún NFT.</p>
             <?php else: ?>
                 <div class="mis-nft-grid">
                     <?php foreach ($nfts as $nft): ?>
