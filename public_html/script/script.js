@@ -136,7 +136,7 @@ containerHeader.addEventListener('click', function() {
 window.addEventListener('resize', function() {
     var width = window.innerWidth;
 
-    if (width > 1331) {
+    if (width > 1331 && width < 1367 || width > 1599) {
         searchForm.style.display = 'block';
         searchIcon.style.display = 'none';
         navMenu.style.display = 'block';
@@ -144,7 +144,7 @@ window.addEventListener('resize', function() {
         searchForm.style.animation = 'none';
     }
 
-    if (width > 972 && width < 1332) {
+    if (width > 972 && width < 1332 || width > 1366 && width < 1600) {
         searchForm.style.display = 'none';
         searchIcon.style.display = 'inline-block';
         navMenu.style.display = 'block';
