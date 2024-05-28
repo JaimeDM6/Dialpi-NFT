@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_SERVER['HTTP_X_REQUESTED_WI
                 'nombre' => $user['nombre_usuario'],
                 'apellidos' => $user['apellidos_usuario'],
                 'id' => $user['id_usuario'],
-                'ruta_perfil' => $user['ruta_perfil'],
+                'token_foto' => $user['token_foto'],
                 'direccion' => $user['direccion_usuario'],
             ];
 
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_SERVER['HTTP_X_REQUESTED_WI
                 'nombre' => $user['nombre_usuario'],
                 'apellidos' => $user['apellidos_usuario'],
                 'id' => $user['id_usuario'],
-                'ruta_perfil' => $user['ruta_perfil'],
+                'token_foto' => $user['token_foto'],
                 'direccion' => $user['direccion_usuario'],
             ];
 

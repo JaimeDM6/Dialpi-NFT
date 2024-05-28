@@ -154,23 +154,33 @@ window.addEventListener('resize', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     var isMobile = window.matchMedia("only screen and (max-width: 972px)").matches;
-
-    if (isMobile) {
-        document.getElementById('cart-icon').addEventListener('click', function() {
-            var dropdown = document.querySelector('.cart-dropdown');
-            dropdown.classList.contains('show') ? dropdown.classList.remove('show') : dropdown.classList.add('show');
-        });
-    } else {
-        document.getElementById('cart-icon').addEventListener('mouseover', function() {
-            document.querySelector('.cart-dropdown').classList.add('show');
-        });
-
-        document.getElementById('cart-icon').addEventListener('mouseout', function() {
-            document.querySelector('.cart-dropdown').classList.remove('show');
-        });
-    }
-
+    var cartIcon = document.getElementById('cart-icon');
     var logoutElement = document.getElementById('logout');
+
+    if (cartIcon) {
+        if (isMobile) {
+            cartIcon.addEventListener('click', function() {
+                var dropdown = document.querySelector('.cart-dropdown');
+                if (dropdown) {
+                    dropdown.classList.toggle('show');
+                }
+            });
+        } else {
+            cartIcon.addEventListener('mouseover', function() {
+                var dropdown = document.querySelector('.cart-dropdown');
+                if (dropdown) {
+                    dropdown.classList.add('show');
+                }
+            });
+
+            cartIcon.addEventListener('mouseout', function() {
+                var dropdown = document.querySelector('.cart-dropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+    }
 
     if (logoutElement) {
         logoutElement.addEventListener('click', function(e) {
@@ -179,11 +189,14 @@ document.addEventListener('DOMContentLoaded', function() {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/logout', true);
             xhr.onload = function() {
-                if (this.status == 200) {
+                if (xhr.status === 200) {
                     localStorage.clear();
                     window.location.href = "/";
                 }
-            }
+            };
+            xhr.onerror = function() {
+                console.error("Error occurred while logging out.");
+            };
             xhr.send();
         });
     }

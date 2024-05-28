@@ -24,6 +24,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarDireccion']))
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cambiar-passwd'])) {
+    $response = array('error' => false, 'message' => '');
+
+    $usuario_id = $_SESSION['usuario']['id'];
+    $password = $_POST["current-password"];
+    $new_password = $_POST["new-password"];
+    $confirm_password = $_POST["confirm-password"];
+
+    $sql = "SELECT password_usuario FROM Usuarios WHERE id_usuario = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if ($user && (password_verify($password, $user['password_usuario']) || hash('sha512', $password) === $user['password_usuario'])) {
+        if ($new_password !== $confirm_password) {
+            $response['error'] = true;
+            $response['message'] = "Las contraseñas no coinciden.";
+        } else {
+            $new_password_hashed = password_hash($new_password, PASSWORD_DEFAULT);
+            $update_sql = "UPDATE Usuarios SET password_usuario = ? WHERE id_usuario = ?";
+            $update_stmt = $conexion->prepare($update_sql);
+            $update_stmt->bind_param("si", $new_password_hashed, $usuario_id);
+            if ($update_stmt->execute()) {
+                $response['message'] = 'success';
+            } else {
+                $response['error'] = true;
+                $response['message'] = " Error al actualizar la contraseña.";
+            }
+        }
+    } else {
+        $response['error'] = true;
+        $response['message'] = "Contraseña incorrecta.";
+    }
+    
+    echo json_encode($response);
+    exit;
+}
+
 $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
 
 include __DIR__ . '/../includes/head.php';
@@ -45,21 +85,27 @@ include __DIR__ . '/../includes/head.php';
                     case 'perfil':
                         $id_usuario = $_SESSION['usuario']['id'];
 
-                            $query = "SELECT dni_usuario, nombre_usuario, apellidos_usuario, email_usuario, telefono_usuario, ruta_perfil 
+                            $query = "SELECT dni_usuario, nombre_usuario, apellidos_usuario, email_usuario, telefono_usuario 
                                          FROM Usuarios WHERE id_usuario = ?";
                             
                             $stmt = $conexion->prepare($query);
                             $stmt->bind_param("i", $id_usuario);
                             $stmt->execute();
-                            $stmt->bind_result($dni, $nombre, $apellidos, $correo, $telefono, $ruta_perfil);
+                            $stmt->bind_result($dni, $nombre, $apellidos, $correo, $telefono);
                             $stmt->fetch();
                             $stmt->close();
                             
-                            $ruta_perfil = isset($_SESSION['ruta_perfil']) && $_SESSION['ruta_perfil'] != '' ? $_SESSION['ruta_perfil'] : '/img/perfil.png';
-                            
                                 echo '<div class="perfil">';
                                 echo '<div style="text-align: center;">';
-                                echo '<img src="' . $ruta_perfil . '" alt="Imagen de perfil">';
+                                echo '<div id="overlay" class="overlay"></div>';
+                                echo '<div class="perfil-img-wrapper">';
+                                echo '<img class="perfil-img" src="/../images.php?token_foto=' . $_SESSION['usuario']['token_foto'] . '" alt="Imagen de perfil">';
+                                echo '<div class="perfil-img-text">Cambiar</div>';
+                                echo '<div id="menu-cambiar" class="menu-cambiar">';
+                                echo '<button id="eliminar">Eliminar foto</button>';
+                                echo '<input type="file" id="seleccionar-imagen">';
+                                echo '</div>';
+                                echo '</div>';
                                 echo '<h1>' . $nombre . ' ' . $apellidos . '</h1>';
                                 echo '</div>';
                                 
@@ -69,11 +115,8 @@ include __DIR__ . '/../includes/head.php';
                                 echo '<p><strong>Teléfono:</strong> ' . $telefono . '</p>';
                                 echo '</div>';
                                 echo '</div>';
-
                             break;
-
                     case 'direccion':
-                        
                         $idUsuario = $_SESSION['usuario']['id'];
                     
                         $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, estado_provincia, pais_usuario 
@@ -98,7 +141,6 @@ include __DIR__ . '/../includes/head.php';
                                     <button id="eliminar-direccion">Eliminar</button>
                                 </div>
                             </div>
-                            
                         <?php
                         } else {
                         ?>
@@ -112,7 +154,6 @@ include __DIR__ . '/../includes/head.php';
                         }
                         break;
                     case 'direccion-edit':
-                                    
                         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $direccion = $_POST['direccion'];
                             $cp = $_POST['cp'];
@@ -136,10 +177,8 @@ include __DIR__ . '/../includes/head.php';
 
                             $stmt->close();
                         }
-
                         
                         $idUsuario = $_SESSION['usuario']['id'];
-
                         $query = "SELECT direccion_usuario, cp_usuario, poblacion_usuario, estado_provincia, pais_usuario FROM Usuarios WHERE id_usuario = ?";
                         $stmt = $conexion->prepare($query);
                         $stmt->bind_param('i', $idUsuario);
@@ -166,52 +205,13 @@ include __DIR__ . '/../includes/head.php';
                             </div>
                         </form>
                         <?php
-                    
                         break;
                     case 'seguridad':
-
-                        $response = array('error' => false, 'message' => '');
-
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current-password'], $_POST['new-password'], $_POST['confirm-password'])) {
-                            $usuario_id = $_SESSION['usuario']['id'];
-                            $password = $_POST["current-password"];
-                            $new_password = $_POST["new-password"];
-                            $confirm_password = $_POST["confirm-password"];
-
-                            $sql = "SELECT password_usuario FROM Usuarios WHERE id_usuario = ?";
-                            $stmt = $conexion->prepare($sql);
-                            $stmt->bind_param("i", $usuario_id);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $user = $result->fetch_assoc();
-
-                            if ($user && (password_verify($password, $user['password_usuario']) || hash('sha512', $password) === $user['password_usuario'])) {
-                                if ($new_password !== $confirm_password) {
-                                    $response['error'] = true;
-                                    $response['message'] = 'Las contraseñas no coinciden.';
-                                } else {
-                                    $new_password_hashed = password_hash($new_password, PASSWORD_DEFAULT);
-                                    $update_sql = "UPDATE Usuarios SET password_usuario = ? WHERE id_usuario = ?";
-                                    $update_stmt = $conexion->prepare($update_sql);
-                                    $update_stmt->bind_param("si", $new_password_hashed, $usuario_id);
-                                    if ($update_stmt->execute()) {
-                                        $response['message'] = 'Contraseña cambiada exitosamente.';
-                                    } else {
-                                        $response['error'] = true;
-                                        $response['message'] = 'Error al actualizar la contraseña.';
-                                    }
-                                }
-                            } else {
-                                $response['error'] = true;
-                                $response['message'] = 'Contraseña incorrecta.';
-                            }
-
-                            echo json_encode($response);
-                            exit;
-                        } ?>
+                        ?>
                         <div class="seguridad">
-                            <form method="POST" action="" class="login-form">
-                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                            <form method="POST" action="/cuenta" class="login-form" name="cambiar-passwd">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'])?>">
+                                <input type="hidden" name="cambiar-passwd" value="1">
                                 <p id="error-message" style="color: red;"></p>
                                 <label for="current-password">Contraseña actual:</label><br>
                                 <div class="password-container">
@@ -233,7 +233,7 @@ include __DIR__ . '/../includes/head.php';
                                 <input type="submit" value="Cambiar contraseña">
                             </form>
                         </div>
-            <?php
+                        <?php
                         break;
                     case 'metodo-pago':
                         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar'])) {
@@ -325,7 +325,7 @@ include __DIR__ . '/../includes/head.php';
                                                     <h3>Modificar tarjeta</h3>
                                                     <span class="close">&times;</span>
                                                 </div>
-                                                <form class="form-modificar" action="/cuenta?metodo-pago" method="post">
+                                                <form class="form-modificar" action="/checkout?metodo-pago" method="post">
                                                     <input type="text" name="titular-tarjeta" class="titular-tarjeta" placeholder="Titular de la tarjeta" autocomplete="cc-name" value="<?php echo $tarjeta['titular_tarjeta']; ?>" required>
                                                     <input type="text" name="numero-tarjeta" class="numero-tarjeta" placeholder="Número de tarjeta" autocomplete="cc-number" value="<?php echo $tarjeta['tarjeta_usuario']; ?>" maxlength="19" required>
                                                     <div class="fecha-cvv">
@@ -416,8 +416,17 @@ include __DIR__ . '/../includes/head.php';
     </main>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
     <script src="script/script.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+        document.querySelector('.perfil-img').addEventListener('click', function() {
+            document.getElementById('menu-cambiar').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        });
+
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('menu-cambiar').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
         document.querySelectorAll('.boton-eliminar').forEach(function(button) {
             button.addEventListener('click', function(event) {
                 event.preventDefault();
@@ -488,8 +497,8 @@ include __DIR__ . '/../includes/head.php';
                 if (cardType) {
                     this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
                     this.style.backgroundRepeat = 'no-repeat';
-                    this.style.backgroundPosition = 'right 10px center';
-                    this.style.backgroundSize = 'auto 20px';
+                    this.style.backgroundPosition = 'right 1.2em center';
+                    this.style.backgroundSize = 'auto 1.2em';
                 } else {
                     this.style.backgroundImage = '';
                 }
@@ -572,9 +581,9 @@ include __DIR__ . '/../includes/head.php';
         });
 
         $(document).ready(function() {
-            $('#password-change-form').on('submit', function(event) {
+            $('.login-form').on('submit', function(event) {
                 event.preventDefault();
-                
+
                 $.ajax({
                     url: '/cuenta?seguridad',
                     type: 'POST',
@@ -584,8 +593,8 @@ include __DIR__ . '/../includes/head.php';
                         if (response.error) {
                             $('#error-message').text(response.message);
                         } else {
-                            $('#error-message').text(response.message).css('color', 'green');
-                            $('#password-change-form')[0].reset();
+                            alert('La contraseña se ha cambiado exitosamente.');
+                            window.location.href = '/cuenta';
                         }
                     }
                 });

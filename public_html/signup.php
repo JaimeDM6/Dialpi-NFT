@@ -25,6 +25,7 @@
         $email = $_POST['email'];
         $password = $_POST['password'];
         $confirm_password = $_POST['confirm_password'];
+        $token_foto = 'UUID()';
 
         if (!validar_dni($dni)) {
             $response['error'] = true;
@@ -48,9 +49,9 @@
                 $response['message'] = 'El usuario ya existe.';
             } else {
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $sql = "INSERT INTO Usuarios (dni_usuario, nombre_usuario, apellidos_usuario, email_usuario, password_usuario) VALUES (?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO Usuarios (dni_usuario, nombre_usuario, apellidos_usuario, email_usuario, password_usuario, token_foto) VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt = $conexion->prepare($sql);
-                $stmt->bind_param("sssss", $dni, $nombre, $apellidos, $email, $hashed_password);
+                $stmt->bind_param("ssssss", $dni, $nombre, $apellidos, $email, $hashed_password, $token_foto);
                 $stmt->execute();
                 
                 $response['message'] = 'success';
@@ -90,7 +91,6 @@
         </form>
     </main>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
     $(document).ready(function(){
         $('.login-form').on('submit', function(e) {

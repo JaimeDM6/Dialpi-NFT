@@ -533,6 +533,14 @@ h2 {
     cursor: pointer;
 }
 
+#toggle-current-password, #toggle-new-password, #toggle-confirm-password {
+    position: absolute;
+    right: 0.625em;
+    top: 40%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
 .volver {
     margin-left: 1.25em;
     text-decoration: none;
@@ -1134,7 +1142,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 .boton-paypal {
     color: #ffffff;
     text-decoration: none;
-    padding-right: 5.625em;
+    padding-right: 5.2em;
     background: url('../img/paypal.svg') no-repeat 82% 56% #113984;
     transition: background 0.3s;
 }
@@ -1152,6 +1160,7 @@ a.boton-paypal {
 }
 
 .tarjeta-guardada {
+    width: 70%;
     border: 1px solid #ccc;
     border-radius: 0.625em;
     padding: 1.25em;
@@ -1348,6 +1357,70 @@ footer p {
     width: 12.5em;
     height: 12.5em;
     border-radius: 50%;
+}
+
+.perfil-img-wrapper {
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    width: 12.5em;
+    height: 12.5em;
+    overflow: hidden;
+}
+
+.perfil-img {
+    border-radius: 50%;
+    transition: filter 0.3s ease;
+}
+
+.perfil-img:hover {
+    filter: brightness(70%);
+}
+
+.perfil-img-text {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px 0;
+}
+
+.perfil-img:hover + .perfil-img-text,
+.perfil-img-text:hover {
+    opacity: 1;
+}
+
+.menu-cambiar {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    display: none;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.metodo-pago {
+    width: 80%;
 }
 
 /* Estilos de la página Mis NFT */
@@ -1574,6 +1647,7 @@ footer p {
 
     .cart-dropdown {
         top: 1.25em;
+        font-size: 0.8em;
     }
 
     .cart-item-title, .cart-item-price {
@@ -1682,6 +1756,10 @@ footer p {
         object-fit: cover;
         object-position: center;
     }
+
+    .nft-box a p, .nft-box-disabled a p {
+        font-size: 1em;
+    }
     
     .collection-box a {
         display: block;
@@ -1722,6 +1800,10 @@ footer p {
     
     .cuenta-der {
         margin: 1.875em;
+    }
+
+    .invitado-form input[type="text"], .invitado-form input[type="email"], .invitado-form input[type="tel"] {
+        border-radius: 0.5em;
     }
     
     .boton-derecha {
@@ -1978,35 +2060,32 @@ footer p {
     }
 
     .cart-dropdown {
-        border-radius: 1.25em;
         padding: 1.5625em;
-        width: 15.625em;
+        width: 25em;
+        box-shadow: 0 0.5em 0.8em rgba(0, 0, 0, 0.1);
+        font-size: 0.7em;
     }
 
     .cart-item {
-        width: 129%;
+        width: 130%;
         margin-top: 1.25em;
+        font-size: 1.1em;
     }
 
     .cart-item img {
-        width: 12.5em;
-        height: 12.5em;
+        width: 7em;
+        height: 7em;
         margin-right: 3.125em;
-        border-radius: 1.25em;
     }
 
     .cart-item-2 img {
-        width: 12.5em;
-        height: 12.5em;
-        border-radius: 0.9375em;
+        width: 8em;
+        height: 8em;
+        border-radius: 0.5em;
     }
     
     tr {
         font-size: 1.5em;
-    }
-    
-    .price-header {
-        padding-right: 6.25em;
     }
     
     .cart-total {
@@ -2014,30 +2093,29 @@ footer p {
     }
     
     .cart-items {
-        font-size: 1.5em;
+        font-size: 1.1em;
     }
     
     .cart-total-2 {
-        font-size: 2.1em;
+        font-size: 1.75em;
     }
     
     .cart-buttons {
-        font-size: 1.4em;
+        font-size: 1.25em;
     }
     
     a.cart-button, a.checkout-button {
-        padding: 1.25em 1.875em;
         border-radius: 0.625em;
-        font-size: 1em;
     }
     
     .checkout-button-container {
         gap: 1.875em;
+        font-size: 1.2em;
     }
     
     .login-button {
-        padding: 0.9375em 1.875em;
-        font-size: 1.8em;
+        padding: 0.5em 1em;
+        font-size: 2em;
     }
     
     .volver {
@@ -2068,7 +2146,7 @@ footer p {
     .login-form input[type="submit"] {
         padding: 0.8em;
         border-radius: 0.5em;
-        font-size: 1.75em;
+        font-size: 1.5em;
     }
 
     .password-container {
@@ -2076,7 +2154,6 @@ footer p {
     }
     
     #toggle-password, #toggle-password-2 {
-        right: 1.875em;
         font-size: 1.5em;
     }
 
@@ -2088,7 +2165,8 @@ footer p {
     form.login-form.checkout-login {
         width: 80%;
         border-radius: 0.9375em;
-        font-size: 1em;
+        font-size: 0.75em;
+        padding: 2em;
     }
     
     .signup-link {
@@ -2129,7 +2207,7 @@ footer p {
     }
     
     .collection-cover img {
-        height: 37.5em;
+        height: 22em;
     }
     
     .collection-info {
@@ -2137,21 +2215,24 @@ footer p {
     }
     
     .nft-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         grid-gap: 50px;
     }
     
     .nft-box {
-        border-radius: 1.25em;
+        border-radius: 0.5em;
     }
     
     .add-to-cart {
         border-radius: 0.5em;
-        font-size: 0.8em;
     }
     
     .add-to-cart i {
         margin-right: 0.625em;
+    }
+
+    .cuenta-der {
+        font-size: 0.75em;
     }
     
     .direccion {
@@ -2166,13 +2247,12 @@ footer p {
     
     .direccion button {
         border-radius: 0.625em;
-        font-size: 1.3em;
+        font-size: 1.2em;
     }
     
     .siguiente {
-        padding: 0.9375em 1.5625em;
         border-radius: 0.625em;
-        font-size: 1.4em;
+        font-size: 1.1em;
     }
     
     .direccion-form {
@@ -2211,6 +2291,7 @@ footer p {
     .invitado-form {
         font-size: 1em;
         padding: 2em;
+        width: 55%;
     }
     
     .invitado-form input[type="text"], .invitado-form input[type="email"], .invitado-form input[type="tel"] {
@@ -2225,10 +2306,10 @@ footer p {
         border-radius: 0.625em;
         margin-top: 2.5em;
         font-size: 1.1em;
-    }    
+    }
 
-    .tarjeta-credito h3, .metodo-pago h3 {
-        margin-bottom: 2.5em;
+    .metodo-pago {
+        width: 70%;
     }
     
     .tarjeta-credito {
@@ -2237,27 +2318,27 @@ footer p {
     }
     
     .numero-tarjeta, .titular-tarjeta {
-        margin-bottom: 2.5em;
         border-radius: 0.9375em;
         padding: 1.25em 2.5em;
     }
     
     .mes-tarjeta select, .year-tarjeta select, .cvv input {
-        width: 15.625em;
+        width: 12em;
         border-radius: 0.9375em;
-        padding: 1.875em 2.5em;
     }
     
     input.cvv-input {
         height: 2.5em;
         font-size: 0.8em;
+        padding: 0.3em 1.5em;
     }
     
     .tarjeta-guardada {
         padding: 1em 2em;
         border-radius: 0.9375em;
         font-size: 0.8em;
-        width: 100%;
+        width: 110%;
+        gap: 0.5em;
     }
     
     .tarjeta-guardada img {
@@ -2276,7 +2357,7 @@ footer p {
     }
     
     .fecha-cvv {
-        width: 105%;
+        width: 112%;
     }
     
     .metodo-pago-botones {
@@ -2295,19 +2376,15 @@ footer p {
         font-size: 1em;
     }
     
-    a.boton-paypal {
-        width: 10em;
-    }
-    
     .boton-paypal {
-        padding-right: 6em;
-        background: url(../img/paypal.svg) no-repeat 78% 62% #113984;
+        padding-right: 7em;
+        background: url(../img/paypal.svg) no-repeat 78% 55% #113984;
         transition: background 0.3s;
-        background-size: 9.375em;
+        background-size: 5.5em;
     }
 
     .boton-paypal:hover {
-        background: url('../img/paypal.svg') no-repeat 78% 62% #0d2b6b;
+        background: url(../img/paypal.svg) no-repeat 78% 55% #0d2b6b;
     }
     
     .error-404 {
@@ -2331,10 +2408,6 @@ footer p {
         font-size: 0.7em;
     }
 
-    .contenido .metodo-pago {
-        width: 70%;
-    }
-
     .contenido .tarjeta-guardada {
         padding: 1.25em 1.5em;
     }
@@ -2342,5 +2415,44 @@ footer p {
     .contenido .tarjeta-guardada img {
         width: 5em;
         margin-right: 2em;
+    }
+
+    .modificar-tarjeta h3 {
+        margin-bottom: 0em;
+    }
+
+    .contenido .modal .modal-content {
+        width: 30%;
+    }
+
+    .contenido .boton-proceder {
+        font-size: 1.2em;
+        padding: 0.625em;
+    }
+
+    .mis-nft-grid {
+        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+        grid-gap: 50px;
+    }
+
+    .nft {
+        width: auto;
+    }
+
+    .vender-nft-container .login-form {
+        padding: 1.25em;
+        font-size: 1em;
+    }
+
+    .vender-nft-container .login-form input[type="file"] {
+        font-size: 1em;
+    }
+
+    .vender-nft-container .login-form input::file-selector-button {
+        margin-right: 0.8em;
+    }
+
+    .vender-nft-container .login-form input[type="submit"] {
+        font-size: 1em;
     }
 }

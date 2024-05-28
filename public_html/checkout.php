@@ -137,25 +137,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seleccionarDireccion'
                 }
                 switch ($parametro) {
                     case 'invitado':
-                        if (isset($_SESSION['cart'])) {
-                        ?>
-                            <div class="invitado">
-                                <form method="POST" action="/checkout?direccion" class="invitado-form">
-                                    <p id="error-message" style="color: red;"></p>
-                                    <label for="nombre">Nombre:</label><br>
-                                    <input type="text" id="nombre" name="nombre" required autocomplete="name"><br>
-                                    <label for="apellidos">Apellidos:</label><br>
-                                    <input type="text" id="apellidos" name="apellidos" required autocomplete="family-name"><br>
-                                    <label for="dni">DNI:</label><br>
-                                    <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
-                                    <label for="email">Correo electrónico:</label><br>
-                                    <input type="email" id="email" name="email" required autocomplete="email"><br>
-                                    <label for="telefono">Número de teléfono:</label><br>
-                                    <input type="tel" id="telefono" name="telefono" required placeholder="Introduce tu número de teléfono">
-                                    <input type="submit" value="Siguiente">
-                                </form>
-                            </div>
-                        <?php
+                        if (!isset($_SESSION['usuario'])) {
+                            if (isset($_SESSION['cart'])) {
+                            ?>
+                                <div class="invitado">
+                                    <form method="POST" action="/checkout?direccion" class="invitado-form">
+                                        <p id="error-message" style="color: red;"></p>
+                                        <label for="nombre">Nombre:</label><br>
+                                        <input type="text" id="nombre" name="nombre" required autocomplete="name"><br>
+                                        <label for="apellidos">Apellidos:</label><br>
+                                        <input type="text" id="apellidos" name="apellidos" required autocomplete="family-name"><br>
+                                        <label for="dni">DNI:</label><br>
+                                        <input type="text" id="dni" name="dni" required maxlength="9" autocomplete="off"><br>
+                                        <label for="email">Correo electrónico:</label><br>
+                                        <input type="email" id="email" name="email" required autocomplete="email"><br>
+                                        <label for="telefono">Número de teléfono:</label><br>
+                                        <input type="tel" id="telefono" name="telefono" required placeholder="Introduce tu número de teléfono">
+                                        <input type="submit" value="Siguiente">
+                                    </form>
+                                </div>
+                            <?php
+                            }
+                        } else {
+                            header('Location: /checkout');
                         }
                         break;
                     case 'direccion':
@@ -626,6 +630,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seleccionarDireccion'
                 });
             });
 
+            $('#toggle-password').click(function() {
+                let passwordInput = $('#password');
+                let passwordType = passwordInput.attr('type');
+
+                if (passwordType === 'password') {
+                    passwordInput.attr('type', 'text');
+                    $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
             $('#eliminar-direccion').on('click', function(e) {
                 e.preventDefault();
             
@@ -769,8 +786,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seleccionarDireccion'
                 if (cardType) {
                     this.style.backgroundImage = 'url(/img/card/' + cardType + '.png)';
                     this.style.backgroundRepeat = 'no-repeat';
-                    this.style.backgroundPosition = 'right 10px center';
-                    this.style.backgroundSize = 'auto 20px';
+                    this.style.backgroundPosition = 'right 1.2em center';
+                    this.style.backgroundSize = 'auto 1.2em';
                 } else {
                     this.style.backgroundImage = '';
                 }

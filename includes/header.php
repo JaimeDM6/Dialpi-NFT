@@ -22,10 +22,9 @@
             ?>
                 <nav class="dropdown user-info">
                     <?php
-                        $ruta_perfil = isset($_SESSION['usuario']['ruta_perfil']) && $_SESSION['usuario']['ruta_perfil'] != '' ? $_SESSION['usuario']['ruta_perfil'] : '/img/perfil.png';
                         $apellidos = explode(' ', $_SESSION['usuario']['apellidos']);
                         $primer_apellido = $apellidos[0];
-                        echo '<img class="profile-pic" src="' . $ruta_perfil . '" alt="Foto de perfil">';
+                        echo '<img class="profile-pic" src="/images.php?token_foto=' . $_SESSION['usuario']['token_foto'] . '" alt="Foto de perfil">';
                         echo '<a class="user-name">' . $_SESSION['usuario']['nombre'] . ' ' . $primer_apellido . '&nbsp;&nbsp;<i class="fas fa-chevron-down"></i></a>';
                     ?>
                     <ul class="dropdown-menu">
@@ -68,7 +67,8 @@
                                     $row2 = $result2->fetch_assoc();
 
                                     echo '<li class="cart-item-2">';
-                                    echo '<img src="img/colecciones/' . $row2["nombre_coleccion"] . '/' . $row["nombre_nft"] . '.png" alt="' . ucfirst($row["nombre_nft"]) . '">' . ucfirst($row["nombre_nft"]);
+                                    echo '<img src="img/colecciones/' . $row2["nombre_coleccion"] . '/' . $row["nombre_nft"] . '.png" alt="' . ucfirst($row["nombre_nft"]) . '">';
+                                    echo '<span class="cart-item-title">' . ucfirst($row["nombre_nft"]) . '</span>';
                                     echo '<span class="cart-item-price">' . $row["precio"] . ' ETH</span>';
                                     echo '</li>';
                                     $subtotal += $row["precio"];
