@@ -65,10 +65,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cambiar-passwd'])) {
 }
 
 $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
-
-include __DIR__ . '/../includes/head.php';
-    include __DIR__ . '/../includes/header.php';
-    ?>
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title; ?></title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Amaranth" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/grover-heavy" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+    <script src="https://kit.fontawesome.com/ea577ecbca.js" crossOrigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+</head>
+<body>
+    <?php include __DIR__ . '/../includes/header.php'; ?>
     <main>
         <div class="container-cuenta">
             <div class="menu-columna">
@@ -96,20 +110,31 @@ include __DIR__ . '/../includes/head.php';
                             $stmt->close();
                             
                                 echo '<div class="perfil">';
-                                echo '<div style="text-align: center;">';
+                                echo '<div class="foto-nombre">';
                                 echo '<div id="overlay" class="overlay"></div>';
                                 echo '<div class="perfil-img-wrapper">';
-                                echo '<img class="perfil-img" src="/../images.php?token_foto=' . $_SESSION['usuario']['token_foto'] . '" alt="Imagen de perfil">';
+                                echo '<img class="perfil-img" src="/images.php?token_foto=' . $_SESSION['usuario']['token_foto'] . '" id="uploaded_image" alt="Imagen de perfil">';
                                 echo '<div class="perfil-img-text">Cambiar</div>';
-                                echo '<div id="menu-cambiar" class="menu-cambiar">';
-                                echo '<button id="eliminar">Eliminar foto</button>';
-                                echo '<input type="file" id="seleccionar-imagen">';
-                                echo '</div>';
+                                echo '<input type="file" name="image" class="image" id="upload_image" accept="image/*" style="display:none">';
                                 echo '</div>';
                                 echo '<h1>' . $nombre . ' ' . $apellidos . '</h1>';
                                 echo '</div>';
-                                
-                                echo '<div style="text-align: center;">';
+                                ?>
+                                <div class="modal-foto" id="modal-foto">
+                                    <div class="modal-content">
+                                        <div class="recortar-imagen">
+                                            <h3>Recortar Imagen</h3>
+                                            <span class="close">&times;</span>
+                                        </div>
+                                        <div class="img-container">
+                                            <img id="sample_image" src="" alt="Sample Image">
+                                        </div>
+                                        <button id="crop">Recortar</button>
+                                        <button id="cancel">Cancelar</button>
+                                    </div>
+                                </div>
+                                <?php
+                                echo '<div style="text-align: center; margin-top: 3em;">';
                                 echo '<p><strong>DNI:</strong> ' . $dni . '</p>';
                                 echo '<p><strong>Correo electrónico:</strong> ' . $correo . '</p>';
                                 echo '<p><strong>Teléfono:</strong> ' . $telefono . '</p>';
@@ -417,14 +442,91 @@ include __DIR__ . '/../includes/head.php';
     <?php include __DIR__ . '/../includes/footer.php'; ?>
     <script src="script/script.js"></script>
     <script>
-        document.querySelector('.perfil-img').addEventListener('click', function() {
-            document.getElementById('menu-cambiar').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const perfilImgWrapper = document.querySelector('.perfil-img-wrapper');
+            const uploadImage = document.getElementById('upload_image');
+            const modalFoto = document.getElementById('modal-foto');
+            const closeModal = document.querySelector('.modal-content .close');
+            const sampleImage = document.getElementById('sample_image');
+            const cropButton = document.getElementById('crop');
+            const cancelButton = document.getElementById('cancel');
+            let cropper;
 
-        document.getElementById('overlay').addEventListener('click', function() {
-            document.getElementById('menu-cambiar').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
+            perfilImgWrapper.addEventListener('click', () => {
+                uploadImage.click();
+            });
+
+            uploadImage.addEventListener('change', (event) => {
+                const files = event.target.files;
+                if (files && files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        sampleImage.src = event.target.result;
+                        modalFoto.style.display = 'flex';
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        cropper = new Cropper(sampleImage, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            autoCropArea: 1,
+                            responsive: true,
+                            background: false,
+                            center: true
+                        });
+                    };
+                    reader.readAsDataURL(files[0]);
+                }
+            });
+
+            closeModal.addEventListener('click', () => {
+                modalFoto.style.display = 'none';
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            });
+
+            cancelButton.addEventListener('click', () => {
+                modalFoto.style.display = 'none';
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            });
+
+            cropButton.addEventListener('click', () => {
+                const canvas = cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                });
+
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const formData = new FormData();
+                    formData.append('croppedImage', blob, 'profile.png');
+
+                    fetch('/upload', {
+                        method: 'POST',
+                        body: formData,
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        console.log(data);
+                        if (data.status === 'success') {
+                            modalFoto.style.display = 'none';
+                            cropper.destroy();
+                            cropper = null;
+                            document.getElementById('uploaded_image').src = url;
+                            window.location.reload();
+                        } else {
+                            console.error(data.message);
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+                }, 'image/png');
+            });
         });
 
         document.querySelectorAll('.boton-eliminar').forEach(function(button) {

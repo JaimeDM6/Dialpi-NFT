@@ -1,24 +1,21 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
-    header('HTTP/1.0 403 Forbidden');
-    exit('No tienes permiso para acceder a esta imagen.');
+if (!isset($_SESSION['usuario']) || !isset($_GET['token_foto']) || $_GET['token_foto'] !== $_SESSION['usuario']['token_foto']) {
+    http_response_code(403);
+    include('403.php');
+    exit();
 }
 
 $token_foto = basename($_GET['token_foto']);
-$ruta_png = "/../profile_images/{$token_foto}.png";
-$ruta_jpg = "/../profile_images/{$token_foto}.jpg";
-$ruta_jpeg = "/../profile_images/{$token_foto}.jpeg";
+$files = glob("../profile_images/{$token_foto}.*");
 
-if (file_exists($ruta_png)) {
-    $ruta = $ruta_png;
-} elseif (file_exists($ruta_jpg)) {
-    $ruta = $ruta_jpg;
-} elseif (file_exists($ruta_jpeg)) {
-    $ruta = $ruta_jpeg;
+if (!empty($files)) {
+    $ruta = $files[0];
+    $_SESSION['foto_perfil'] = 'personalizada';
 } else {
-    $ruta = "/img/perfil.png";
+    $ruta = "img/perfil.png";
+    $_SESSION['foto_perfil'] = 'default';
 }
 
 header('Content-Type: ' . mime_content_type($ruta));
