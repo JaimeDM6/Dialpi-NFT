@@ -5,6 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file = $_FILES['croppedImage'];
         $originalExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $uploadPath = '../profile_images/' . $_SESSION['usuario']['token_foto'] . '.' . $originalExtension;
+        $maxFileSize = 2 * 1024 * 1024;
+
+        if ($file['size'] > $maxFileSize) {
+            echo json_encode(['status' => 'error', 'message' => 'El archivo es demasiado grande. El tamaño máximo permitido es de 2MB.']);
+            exit;
+        }
 
 		if (file_exists($uploadPath)) {
             unlink($uploadPath);

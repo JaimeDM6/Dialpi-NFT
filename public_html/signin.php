@@ -50,6 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_SERVER['HTTP_X_REQUESTED_WI
                 'direccion' => true,
             ];
 
+            if ($email === 'admin@nftdialpi.ddns.net') {
+                $_SESSION['administrador'] = true;
+            }
+
             unset($_SESSION['invitado']);
             $response['message'] = 'success';
         } else if (hash('sha512', $password) === $user['password_usuario']) {
@@ -71,6 +75,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_SERVER['HTTP_X_REQUESTED_WI
             $_SESSION['checkout'] = [
                 'direccion' => true,
             ];
+
+            if ($email === 'admin@nftdialpi.ddns.net') {
+                $_SESSION['administrador'] = true;
+            }
 
             unset($_SESSION['invitado']);
             $response['message'] = 'success';

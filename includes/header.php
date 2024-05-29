@@ -30,6 +30,11 @@
                     <ul class="dropdown-menu">
                         <li><a href="/cuenta" id="perfil">Cuenta</a></li>
                         <li><a href="/mis-nft" id="mis_nft">Mis NFT</a></li>
+                        <?php
+                            if (isset($_SESSION['administrador']) && $_SESSION['administrador'] === true) {
+                                echo '<li><a href="/colecciones-admin">Colecciones</a></li>';
+                            }
+                        ?>
                         <li><a href="#" id="logout">Cerrar sesión</a></li>
                     </ul>
                 </nav>
@@ -166,6 +171,11 @@
                         <ul class="dropdown-menu-mobile-2">
                             <a href="/cuenta"><li>Cuenta</li></a>
                             <a href="/mis-nft"><li>Mis NFT</li></a>
+                            <?php
+                                if (isset($_SESSION['administrador']) && $_SESSION['administrador'] === true) {
+                                    echo '<a href="/colecciones-admin"><li>Colecciones</li></a>';
+                                }
+                            ?>
                             <a href="#" id="logout"><li>Cerrar sesión</li></a>
                         </ul>
                     </li>

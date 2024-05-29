@@ -129,8 +129,10 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
                                         <div class="img-container">
                                             <img id="sample_image" src="" alt="Sample Image">
                                         </div>
-                                        <button id="crop">Recortar</button>
-                                        <button id="cancel">Cancelar</button>
+                                        <div class="button-container">
+                                            <button id="crop">Recortar</button>
+                                            <button id="cancel">Cancelar</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <?php
@@ -428,6 +430,9 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
                                                     <input type="text" name="ccv" class="cvv-input" placeholder="CVV" autocomplete="cc-csc" maxlength="3" required>
                                                 </div>
                                             </div>
+                                            <div class="metodo-pago-botones">
+                                                <button type="submit" class="boton-proceder" name="boton-proceder">Guardar tarjeta</button>
+                                            </div>
                                         </form>
                                     <?php
                                     }
@@ -459,23 +464,45 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
             uploadImage.addEventListener('change', (event) => {
                 const files = event.target.files;
                 if (files && files.length > 0) {
+                    const file = files[0];
+                    const maxFileSize = 2 * 1024 * 1024;
+
+                    if (file.size > maxFileSize) {
+                        alert('El archivo es demasiado grande. El tamaño máximo permitido es de 2MB.');
+                        return;
+                    }
+
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         sampleImage.src = event.target.result;
-                        modalFoto.style.display = 'flex';
-                        if (cropper) {
-                            cropper.destroy();
-                        }
-                        cropper = new Cropper(sampleImage, {
-                            aspectRatio: 1,
-                            viewMode: 1,
-                            autoCropArea: 1,
-                            responsive: true,
-                            background: false,
-                            center: true
-                        });
+                        sampleImage.onload = function() {
+                            const imgWidth = sampleImage.naturalWidth;
+                            const imgHeight = sampleImage.naturalHeight;
+                            const container = document.querySelector('.img-container');
+
+                            if (imgWidth > imgHeight) {
+                                container.style.width = '20em';
+                                container.style.height = 'auto';
+                            } else {
+                                container.style.width = 'auto';
+                                container.style.height = '20em';
+                            }
+
+                            modalFoto.style.display = 'flex';
+                            if (cropper) {
+                                cropper.destroy();
+                            }
+                            cropper = new Cropper(sampleImage, {
+                                aspectRatio: 1,
+                                viewMode: 1,
+                                autoCropArea: 1,
+                                responsive: true,
+                                background: false,
+                                center: true
+                            });
+                        };
                     };
-                    reader.readAsDataURL(files[0]);
+                    reader.readAsDataURL(file);
                 }
             });
 
@@ -496,6 +523,10 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
             });
 
             cropButton.addEventListener('click', () => {
+                cropButton.classList.add('loading');
+                cropButton.disabled = true;
+                cropButton.textContent = 'Subiendo';
+
                 const canvas = cropper.getCroppedCanvas({
                     width: 400,
                     height: 400,
@@ -512,7 +543,10 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
                     }).then((response) => {
                         return response.json();
                     }).then((data) => {
-                        console.log(data);
+                        cropButton.classList.remove('loading');
+                        cropButton.disabled = false;
+                        cropButton.textContent = 'Recortar';
+
                         if (data.status === 'success') {
                             modalFoto.style.display = 'none';
                             cropper.destroy();
@@ -520,9 +554,14 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
                             document.getElementById('uploaded_image').src = url;
                             window.location.reload();
                         } else {
+                            alert(data.message);
                             console.error(data.message);
                         }
                     }).catch((error) => {
+                        cropButton.classList.remove('loading');
+                        cropButton.disabled = false;
+                        cropButton.textContent = 'Recortar';
+                        alert('Error de red. Por favor, inténtelo de nuevo.');
                         console.error(error);
                     });
                 }, 'image/png');
