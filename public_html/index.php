@@ -27,8 +27,9 @@ include __DIR__ . '/../includes/head.php';
         <div class="container">
             <h2>Colecciones Destacadas</h2>
             <?php
-            $query = "SELECT id_coleccion, nombre_coleccion, creador, disponible, precio_coleccion FROM Coleccion_NFT";
-            $result = $conexion->query($query);
+            $stmt = $conexion->prepare("SELECT id_coleccion, nombre_coleccion, creador, disponible, precio_coleccion FROM Coleccion_NFT");
+            $stmt->execute();
+            $result = $stmt->get_result();
             
             if ($result->num_rows > 0) {
                 echo '<div class="collection-grid">';
@@ -36,7 +37,12 @@ include __DIR__ . '/../includes/head.php';
                     if ($row['disponible'] === 'Sí') {
                         echo '<div class="collection-box">';
                         echo '<a href="/coleccion?id=' . $row["id_coleccion"] . '">';
-                        echo '<img src="img/colecciones/' . $row["nombre_coleccion"] . '/' . $row["nombre_coleccion"] . '1.png" alt="' . $row["nombre_coleccion"] . '">';
+
+                        $imagePath = 'img/colecciones/' . $row["nombre_coleccion"] . '/' . $row["nombre_coleccion"] . '1.png';
+                        if (file_exists($imagePath)) {
+                            echo '<img src="' . $imagePath . '" alt="' . $row["nombre_coleccion"] . '">';
+                        }
+
                         echo '<h3>' . ucfirst($row["nombre_coleccion"]) . '</h3>';
                         echo '<p>Creador: ' . $row["creador"] . '</p>';
                         echo '<p style="margin-bottom: 10px;">Precio: ' . $row["precio_coleccion"] . ' ETH</p>';
@@ -45,7 +51,12 @@ include __DIR__ . '/../includes/head.php';
                     } else {
                         echo '<div class="collection-box-disabled" style="opacity: 0.5; cursor: not-allowed;">';
                         echo '<a>';
-                        echo '<img src="img/colecciones/' . $row["nombre_coleccion"] . '/' . $row["nombre_coleccion"] . '1.png" alt="' . $row["nombre_coleccion"] . '">';
+
+                        $imagePath = 'img/colecciones/' . $row["nombre_coleccion"] . '/' . $row["nombre_coleccion"] . '1.png';
+                        if (file_exists($imagePath)) {
+                            echo '<img src="' . $imagePath . '" alt="' . $row["nombre_coleccion"] . '">';
+                        }
+
                         echo '<h3>' . ucfirst($row["nombre_coleccion"]) . '</h3>';
                         echo '<p>Creador: ' . $row["creador"] . '</p>';
                         echo '<p style="margin-bottom: 10px;">Precio: ' . $row["precio_coleccion"] . ' ETH</p>';

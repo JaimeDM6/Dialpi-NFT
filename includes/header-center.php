@@ -1,6 +1,6 @@
 <?php
     $current_url = $_SERVER['REQUEST_URI'];
-    $logo_link = $current_url == '/procesar-pago?confirmar' ? '/efectuar-pago.php?procesado=1' : '/';
+    $logo_link = $current_url == '/procesar-pago?confirmar' ? '/procesar-pago?procesado=1' : '/';
 ?>
 <header>
     <div class="container-header-centered">

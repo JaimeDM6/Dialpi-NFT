@@ -14,19 +14,14 @@ if (!isset($_SESSION['administrador']) || $_SESSION['administrador'] !== true) {
     exit();
 }
 
-$stmt = $conexion->prepare('SELECT * FROM Coleccion_NFT');
+$parametro = array_key_first($_GET);
+
+$stmt = $conexion->prepare("SELECT id_coleccion, nombre_coleccion, creador, precio_coleccion FROM Coleccion_NFT");
 $stmt->execute();
 $result = $stmt->get_result();
-$colecciones = $result->fetch_all(MYSQLI_ASSOC);
-
-$query_nft = "SELECT * FROM NFT WHERE coleccion = ?";
-$stmt_nft = $conexion->prepare($query_nft);
-$stmt_nft->bind_param('i', $id_coleccion);
-$stmt_nft->execute();
-$result_nft = $stmt_nft->get_result();
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $parametro === 'nueva') {
     
     $stmt = $conexion->prepare('INSERT INTO Coleccion_NFT (nombre_coleccion, creador, precio_coleccion) VALUES (?, ?, ?)');
     $stmt->bind_param('ssd', $_POST['nombre'], $_POST['creador'], $_POST['precio']);
@@ -36,29 +31,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar'])) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    if ($_POST['action'] === 'delete') {
-        $id = $_POST['id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    $id = $_POST['delete'];
 
-        $stmt = $conexion->prepare('DELETE FROM Coleccion_NFT WHERE id_coleccion = ?');
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
+    $stmt = $conexion->prepare('DELETE FROM Coleccion_NFT WHERE id_coleccion = ?');
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
 
-        if ($stmt->affected_rows > 0) {
-            echo json_encode(['success' => true]);
-        } else {
-            http_response_code(500);
-            echo json_encode(['error' => 'Hubo un error al eliminar la colección.']);
-        }
-        exit;
+    if ($stmt->affected_rows > 0) {
+        echo json_encode(['success' => true]);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Hubo un error al eliminar la colección.']);
     }
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar'])) {
-    
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $parametro === 'editar') {
+    $id = $_POST['id'];
+    while ($row = $result->fetch_assoc()) {
+        if ($row['id_coleccion'] == $id) {
+            $nombreOriginal = $row['nombre_coleccion'];
+            break;
+        }
+    }
+
     $stmt = $conexion->prepare('UPDATE Coleccion_NFT SET nombre_coleccion = ?, creador = ?, precio_coleccion = ? WHERE id_coleccion = ?');
     $stmt->bind_param('ssdi', $_POST['nombre'], $_POST['creador'], $_POST['precio'], $_POST['id']);
     $stmt->execute();
+
+    if ($nombreOriginal != $_POST['nombre']) {
+        $oldDir = __DIR__ . '/img/colecciones/' . $nombreOriginal;
+        $newDir = __DIR__ . '/img/colecciones/' . $_POST['nombre'];
+        rename($oldDir, $newDir);
+    }
     
     header('Location: /colecciones-admin');
     exit;
@@ -69,117 +75,118 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar'])) {
     <?php include __DIR__ . '/../includes/header.php'; ?>
     <main>
         <div class="container">
-            <h1>Administración de Colecciones</h1>
-            <div class="boton-coleccion">
-                <button class="nueva-coleccion" onclick="nuevaColeccion()">Nueva Colección</button>
-            </div>
-
-            <form method="POST" class="login-form agregar-coleccion" id="nueva-coleccion" style="display: none;">
-                <h2>Agregar nueva colección</h2>
-                <input type="text" name="nombre" placeholder="Nombre" required>
-                <input type="text" name="creador" placeholder="Creador" required>
-                <input type="number" step="0.01" name="precio" placeholder="Precio (ETH)" required>
-                <div class="contenedor-botones">
-                    <button type="submit" name="agregar" class="editar-coleccion">Agregar</button>
-                    <button type="button" class="eliminar-coleccion" onclick="cancelarNueva()">Cancelar</button>
-                </div>
-            </form>
-
-            <div class="collection-grid" id="colecciones">
-                <?php foreach ($colecciones as $coleccion): ?>
-                    <?php
-                    $stmt_nft = $conexion->prepare('SELECT nombre_nft FROM NFT WHERE coleccion = ? LIMIT 1');
-                    $stmt_nft->bind_param('i', $coleccion['id_coleccion']);
-                    $stmt_nft->execute();
-                    $result_nft = $stmt_nft->get_result();
-                    $nft = $result_nft->fetch_assoc();
-                    $imagen = $nft['nombre_nft'] . '.png';
-                    ?>
-                    <div class="collection-box" id="coleccion-<?= $coleccion['id_coleccion'] ?>">
-                        <img src="img/colecciones/<?= $coleccion['nombre_coleccion'] ?>/<?= $imagen ?>" alt="<?= $coleccion['nombre_coleccion'] ?>">
-                        <h3><?= ucfirst($coleccion['nombre_coleccion']) ?></h3>
-                        <p>Creador: <?= $coleccion['creador'] ?></p>
-                        <p style="margin-bottom: 10px;">Precio: <?= $coleccion['precio_coleccion'] ?> ETH</p>
-
+            <h2>Administración de Colecciones</h2>
+            <?php
+            switch ($parametro) {
+                case 'nueva': ?>
+                    <form method="POST" class="login-form agregar-coleccion" id="nueva-coleccion">
+                        <h2>Agregar nueva colección</h2>
+                        <input type="text" name="nombre" placeholder="Nombre" required>
+                        <input type="text" name="creador" placeholder="Creador" required>
+                        <input type="number" step="0.01" name="precio" placeholder="Precio (ETH)" required>
                         <div class="contenedor-botones">
-                            <button class="editar-coleccion" onclick="editar('<?= $coleccion['id_coleccion'] ?>')">Editar</button>
-                            <button class="eliminar-coleccion" onclick="eliminar('<?= $coleccion['id_coleccion'] ?>')">Eliminar</button>
+                            <button type="submit" class="editar-coleccion">Agregar</button>
+                            <a href="/colecciones-admin" class="eliminar-coleccion">Cancelar</a>
                         </div>
-                       
+                    </form>
+                    <?php
+                    break;
+                case 'editar':
+                    $stmt = $conexion->prepare("SELECT id_coleccion, nombre_coleccion, creador, disponible, precio_coleccion FROM Coleccion_NFT WHERE id_coleccion = ?");
+                    $stmt->bind_param("i", $_GET['editar']);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+                    ?>
+                    <form method="POST" class="login-form" id="editar-coleccion">
+                        <input type="hidden" name="id" value="<?= $row['id_coleccion'] ?>">
+                        
+                        <label for="nombre-<?= $row['id_coleccion'] ?>">Nombre</label>
+                        <input type="text" id="nombre-<?= $row['id_coleccion'] ?>" name="nombre" value="<?= $row['nombre_coleccion'] ?>" required>
+                        
+                        <label for="creador-<?= $row['id_coleccion'] ?>">Creador</label>
+                        <input type="text" id="creador-<?= $row['id_coleccion'] ?>" name="creador" value="<?= $row['creador'] ?>" required>
+                        
+                        <label for="precio-<?= $row['id_coleccion'] ?>">Precio (ETH)</label>
+                        <input type="number" id="precio-<?= $row['id_coleccion'] ?>" step="0.01" name="precio" value="<?= $row['precio_coleccion'] ?>" required>
+                        
+                        <div class="contenedor-botones">
+                            <button type="submit" class="editar-coleccion">Guardar</button>
+                            <a href="/colecciones-admin" class="eliminar-coleccion">Cancelar</a>
+                        </div>
+                    </form>
+                    <?php
+                    break;
+                default:
+                    ?>
+                    <div class="boton-coleccion">
+                        <a href="/colecciones-admin?nueva" class="nueva-coleccion">Nueva Colección</a>
                     </div>
-                <?php endforeach; ?>
-            </div>
-            <?php foreach ($colecciones as $coleccion): ?>
-                <form method="POST" class="login-form" id="editar-<?= $coleccion['id_coleccion'] ?>" style="display: none;">
-                    <input type="hidden" name="id" value="<?= $coleccion['id_coleccion'] ?>">
-                    
-                    <label for="nombre-<?= $coleccion['id_coleccion'] ?>">Nombre</label>
-                    <input type="text" id="nombre-<?= $coleccion['id_coleccion'] ?>" name="nombre" value="<?= $coleccion['nombre_coleccion'] ?>" required>
-                    
-                    <label for="creador-<?= $coleccion['id_coleccion'] ?>">Creador</label>
-                    <input type="text" id="creador-<?= $coleccion['id_coleccion'] ?>" name="creador" value="<?= $coleccion['creador'] ?>" required>
-                    
-                    <label for="precio-<?= $coleccion['id_coleccion'] ?>">Precio (ETH)</label>
-                    <input type="number" id="precio-<?= $coleccion['id_coleccion'] ?>" step="0.01" name="precio" value="<?= $coleccion['precio_coleccion'] ?>" required>
-                    
-                    <div class="contenedor-botones">
-                        <button type="submit" class="editar-coleccion" name="editar">Guardar</button>
-                        <button type="button" class="eliminar-coleccion" onclick="cancelar('<?= $coleccion['id_coleccion'] ?>')">Cancelar</button>
-                    </div>
-                </form>
-            <?php endforeach; ?>
+    
+                    <?php    
+                    if ($result->num_rows > 0) {
+                        echo '<div class="collection-grid">';
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<div class="collection-box">';
+                            
+                            $imagePath = 'img/colecciones/' . $row["nombre_coleccion"] . '/' . $row["nombre_coleccion"] . '1.png';
+                            if (file_exists($imagePath)) {
+                                echo '<img src="' . $imagePath . '" alt="' . $row["nombre_coleccion"] . '">';
+                            }
+                            
+                            echo '<h3>' . ucfirst($row["nombre_coleccion"]) . '</h3>';
+                            echo '<p>Creador: ' . $row["creador"] . '</p>';
+                            echo '<p style="margin-bottom: 10px;">Precio: ' . $row["precio_coleccion"] . ' ETH</p>';
+                            echo '<div class="contenedor-botones">';
+                            echo '<a href="/colecciones-admin?editar=' . $row['id_coleccion'] . '" class="editar-coleccion">Editar</a>';
+                            echo '<a href="" class="eliminar-coleccion" id="eliminar-coleccion" data-id="' . $row['id_coleccion'] . '">Eliminar</a>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                    } else {
+                        echo "<p>No se encontraron colecciones disponibles.</p>";
+                    }
+                    break;
+            } ?>
         </div>
     </main>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
+    <script src="script/script.js"></script>
     <script>
-        function nuevaColeccion() {
-            document.getElementById('nueva-coleccion').style.display = 'block';
-            document.getElementById('colecciones').style.display = 'none';
-        }
-
-        function cancelarNueva() {
-            document.getElementById('nueva-coleccion').style.display = 'none';
-            document.getElementById('colecciones').style.display = 'grid';
-        }
-
-        function editar(id) {
-            var colecciones = document.getElementsByClassName('collection-box');
-            for (var i = 0; i < colecciones.length; i++) {
-                colecciones[i].style.display = 'none';
-            }
-            document.getElementById('editar-' + id).style.display = 'block';
-        }
+        var deleteLinks = document.querySelectorAll('#eliminar-coleccion');
         
-        function cancelar(id) {
-            var colecciones = document.getElementsByClassName('collection-box');
-            for (var i = 0; i < colecciones.length; i++) {
-                colecciones[i].style.display = 'block';
-            }
-            document.getElementById('editar-' + id).style.display = 'none';
-        }
-
-        function eliminar(id) {
-            if (confirm('¿Estás seguro/a de que quieres eliminar esta colección?')) {
+        deleteLinks.forEach(function(deleteLink) {
+            deleteLink.addEventListener('click', function(e) {
+                e.preventDefault();
+        
+                if (!confirm('¿Estás seguro/a de que quieres eliminar esta colección?')) {
+                    return;
+                }
+        
+                var id = this.getAttribute('data-id');
+        
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/colecciones-admin', true);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.send('action=delete&id=' + id);
+        
+                var params = 'delete=' + encodeURIComponent(id);
+                xhr.send(params);
         
                 xhr.onload = function() {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
                         if (response.success) {
-                            document.getElementById('coleccion-' + id).remove();
+                            location.href = '/colecciones-admin';
                         } else {
-                            alert(response.error);
+                            alert('Hubo un error al eliminar la colección.');
                         }
                     } else {
                         alert('Hubo un error al eliminar la colección.');
                     }
                 };
-            }
-        }
+            });
+        });
     </script>
-    <script src="script/script.js"></script>
 </body>
 </html>

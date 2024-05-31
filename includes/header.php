@@ -29,10 +29,12 @@
                     ?>
                     <ul class="dropdown-menu">
                         <li><a href="/cuenta" id="perfil">Cuenta</a></li>
-                        <li><a href="/mis-nft" id="mis_nft">Mis NFT</a></li>
                         <?php
-                            if (isset($_SESSION['administrador']) && $_SESSION['administrador'] === true) {
+                            if (!isset($_SESSION['administrador']) && $_SESSION['administrador'] !== true) {
+                                echo '<li><a href="/mis-nft" id="mis_nft">Mis NFT</a></li>';
+                            } else {
                                 echo '<li><a href="/colecciones-admin">Colecciones</a></li>';
+                                echo '<li><a href="/nft-admin">NFTs</a></li>';
                             }
                         ?>
                         <li><a href="#" id="logout">Cerrar sesión</a></li>

@@ -82,6 +82,11 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
     } while (facturaExiste($numeroFactura, $conexion));
     
     if (isset($_SESSION['usuario'])) {
+        $usuario_id = $_SESSION['usuario']['id'];
+        
+        $nfts_en_cadena = '';
+        $primero = true;
+
         $stmt = $conexion->prepare("INSERT INTO Pedidos_NFT (id_pedido, id_usuario) VALUES (?, ?)");
         $stmt->bind_param("ii", $numeroFactura, $_SESSION['usuario']['id']);
         $stmt->execute();
@@ -90,37 +95,11 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
             $stmt = $conexion->prepare("INSERT INTO Detalle_Pedido (id_pedido, id_nft) VALUES (?, ?)");
             $stmt->bind_param("ii", $numeroFactura, $productId);
             $stmt->execute();
-        }
-    } else {
-        $stmt = $conexion->prepare("INSERT INTO Pedidos_NFT_Invitados (id_pedido, nombre_invitado, apellidos_invitado, dni_invitado) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("isss", $numeroFactura, $_SESSION['invitado']['nombre'], $_SESSION['invitado']['apellidos'], $_SESSION['invitado']['dni']);
-        $stmt->execute();
 
-        foreach ($_SESSION['cart'] as $productId) {
-            $stmt = $conexion->prepare("INSERT INTO Detalle_Pedido_Invitado (id_pedido, id_nft) VALUES (?, ?)");
-            $stmt->bind_param("ii", $numeroFactura, $productId);
-            $stmt->execute();
-        }
-    }
+            $stmt2 = $conexion->prepare("UPDATE NFT SET propietario_id = ? WHERE id_nft = ?");
+            $stmt2->bind_param("ii", $_SESSION['usuario']['id'], $productId);
+            $stmt2->execute();
 
-    foreach ($_SESSION['cart'] as $productId) {
-        $sql = "UPDATE NFT SET disponible = 'No' WHERE id_nft = ?";
-        $stmt = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($stmt, "i", $productId);
-        $result = mysqli_stmt_execute($stmt);
-
-        $stmt = $conexion->prepare("UPDATE NFT SET propietario_id = ? WHERE id_nft = ?");
-        $stmt->bind_param("ii", $_SESSION['usuario']['id'], $productId);
-        $stmt->execute();
-    }
-
-    if (isset($_SESSION['usuario'])) {
-        $usuario_id = $_SESSION['usuario']['id'];
-        
-        $nfts_en_cadena = '';
-        $primero = true;
-
-        foreach ($_SESSION['cart'] as $productId) {
             if (!$primero) {
                 $nfts_en_cadena .= ';';
             } else {
@@ -143,6 +122,23 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
         $stmt = $conexion->prepare("UPDATE Usuarios SET NFT_comprado = ? WHERE id_usuario = ?");
         $stmt->bind_param("si", $nfts_en_cadena, $usuario_id);
         $stmt->execute();
+    } else {
+        $stmt = $conexion->prepare("INSERT INTO Pedidos_NFT_Invitados (id_pedido, nombre_invitado, apellidos_invitado, dni_invitado) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("isss", $numeroFactura, $_SESSION['invitado']['nombre'], $_SESSION['invitado']['apellidos'], $_SESSION['invitado']['dni']);
+        $stmt->execute();
+
+        foreach ($_SESSION['cart'] as $productId) {
+            $stmt = $conexion->prepare("INSERT INTO Detalle_Pedido_Invitado (id_pedido, id_nft) VALUES (?, ?)");
+            $stmt->bind_param("ii", $numeroFactura, $productId);
+            $stmt->execute();
+        }
+    }
+
+    foreach ($_SESSION['cart'] as $productId) {
+        $sql = "UPDATE NFT SET disponible = 'No' WHERE id_nft = ?";
+        $stmt = mysqli_prepare($conexion, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $productId);
+        $result = mysqli_stmt_execute($stmt);
     }
 
     ?>
@@ -165,7 +161,7 @@ if (isset($_SESSION['pago_realizado']) && !isset($_SESSION['pago_confirmado'])) 
             <h2>Número de pedido: <?php echo $_SESSION['numero_factura']; ?></h2>
             <a href="/certificado" target="_blank">Pulsa aquí para descargar tu certificado.</a><br>
             <img src="/img/exito.png" alt="Éxito">
-            <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago.php?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
+            <p>Recuerda que siempre puedes descargarlo desde tu perfil. <a href="/procesar-pago?procesado=1" id="volver-a-inicio">Volver a inicio.</a></p>
         </div>
     </main>
     <?php
