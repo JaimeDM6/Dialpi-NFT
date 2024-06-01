@@ -114,7 +114,7 @@ nav ul li a:hover {
     padding: 0.3125em;
     padding-left: 0.9375em;
     margin-right: 0.3125em;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 0.9375em;
     font-size: 1em;
 }
@@ -156,7 +156,7 @@ nav ul li a:hover {
     margin-right: 0.625em;
     padding: 0.3125em;
     padding-left: 0.9375em;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 1.25em;
     font-size: 1em;
 }
@@ -297,7 +297,7 @@ nav ul li a:hover {
     width: 18.75em;
     color: #000000;
     background-color: #fff;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 0.625em;
     padding: 0.625em;
     box-shadow: 0 0.125em 0.625em rgba(0, 0, 0, 0.1);
@@ -323,7 +323,7 @@ nav ul li a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 0.0625em solid #ccc;
     padding: 0.625em 0;
 }
 
@@ -386,6 +386,7 @@ h2 {
     border: 0.0625em solid #ccc;
     border-radius: 0.3125em;
     overflow: hidden;
+    height: fit-content;
 }
 
 .collection-box img, .collection-box img {
@@ -432,7 +433,7 @@ h2 {
 }
 
 .collection-box p, .collection-box-disabled p {
-    padding: 0.1875em 0.625em;
+    padding: 0 1em;
 }
 
 .error-404 {
@@ -473,7 +474,7 @@ h2 {
     width: 100%;
     padding: 0.625em;
     margin-bottom: 0.625em;
-    border: 1px solid #ddd;
+    border: 0.0625em solid #ddd;
     border-radius: 0.25em;
 }
 
@@ -482,14 +483,14 @@ h2 {
     width: -webkit-fill-available;
     margin: 0 auto;
     padding: 0.625em;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 0.25em;
     text-align: center;
 }
 
 .login-form .vender-nft {
     padding: 0.625em;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 0.25em;
 }
 
@@ -594,10 +595,11 @@ h2 {
 }
 
 .nft-box, .nft-box-disabled {
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 0.3125em;
     overflow: hidden;
     margin-bottom: 1.25em;
+    height: fit-content;
 }
 
 .nft-box img, .nft-box-disabled img {
@@ -644,7 +646,7 @@ h2 {
 }
 
 .nft-box p, .nft-box-disabled p {
-    padding: 0.1875em 0.625em;
+    padding: 0 1em;
 }
 
 .button-cart-container {
@@ -734,7 +736,7 @@ h2 {
 .collection-preview {
     flex: 0 0 30%;
     padding-left: 1.25em;
-    border-left: 1px solid #ccc;
+    border-left: 0.0625em solid #ccc;
 }
 
 .collection-preview h3 {
@@ -750,7 +752,7 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 0.0625em solid #ccc;
     padding: 0.625em 0;
     width: 131.5%;
 }
@@ -865,7 +867,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     justify-content: center;
     align-items: center;
     vertical-align: top;
-    border-left: 1px solid #616161;
+    border-left: 0.0625em solid #616161;
     width: 50%;
 }
 
@@ -875,7 +877,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
 
 .direccion {
     background-color: #dadada;
-    border: 1px solid #b3b2b2;
+    border: 0.0625em solid #b3b2b2;
     border-radius: 0.3125em;
     box-shadow: 0 0 0.625em 0 rgba(0,0,0,0.1);
     padding: 1.25em;
@@ -956,7 +958,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     width: 100%;
     padding: 0.625em;
     margin-bottom: 0.625em;
-    border: 1px solid #ddd;
+    border: 0.0625em solid #ddd;
     border-radius: 0.25em;
 }
 
@@ -1030,7 +1032,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     width: 100%;
     padding: 0.625em;
     margin-bottom: 0.625em;
-    border: 1px solid #ddd;
+    border: 0.0625em solid #ddd;
     border-radius: 0.25em;
 }
 
@@ -1087,7 +1089,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     width: 100%;
     margin-bottom: 1.25em;
     padding: 0.9375em 1.25em;
-    border: 2px solid #e1e8ee;
+    border: 0.125em solid #e1e8ee;
     border-radius: 0.375em;
 }
 
@@ -1102,7 +1104,7 @@ table th:nth-child(2), table td:nth-child(2), .cart-total, .checkout-button {
     width: 9.0625em;
     margin-bottom: 1.25em;
     padding: 0.9375em 1.25em;
-    border: 2px solid #e1e8ee;
+    border: 0.125em solid #e1e8ee;
     border-radius: 0.375em;
     background-position: 85% 50%;
 }
@@ -1168,7 +1170,7 @@ a.boton-paypal {
 
 .tarjeta-guardada {
     width: 70%;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     border-radius: 0.625em;
     padding: 1.25em;
     margin-bottom: 1.25em;
@@ -1259,7 +1261,7 @@ a.boton-paypal {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 1.25em;
-    border: 1px solid #888;
+    border: 0.0625em solid #888;
     border-radius: 0.625em;
     width: 40%;
     box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.2), 0 0.375em 1.25em 0 rgba(0, 0, 0, 0.19);
@@ -1330,7 +1332,6 @@ a.boton-paypal {
 .coleccion-img {
     width: 4em;
     height: 4em;
-    margin-right: 0.8em;
     border-radius: 0.25em;
     object-fit: cover;
     object-position: center;
@@ -1338,6 +1339,7 @@ a.boton-paypal {
 
 .coleccion-nombre {
     flex-grow: 1;
+    margin-left: 1em;
 }
 
 .nueva-nft-border {
@@ -1436,6 +1438,61 @@ form#nueva-coleccion, form#editar-coleccion {
     background-color: #da190b;
 }
 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 3.75em;
+    height: 2.125em;
+    font-size: 0.8em;
+    margin-right: 1.1em;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 2.125em;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1.625em;
+    width: 1.625em;
+    left: 0.25em;
+    bottom: 0.25em;
+    background-color: white;
+    border-radius: 50%;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #222744;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 0.0625em #222744;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(1.625em);
+    -ms-transform: translateX(1.625em);
+    transform: translateX(1.625em);
+}
+
 /* Estilos del pie de página */
 footer {
     background-color: #222744;
@@ -1463,7 +1520,7 @@ footer p {
 .menu-columna {
     height: 12.5em;
     flex: 0.5;
-    border-right: 1px solid #ccc;
+    border-right: 0.0625em solid #ccc;
 }
 
 .menu-columna ul {
@@ -1595,7 +1652,7 @@ footer p {
 .nft {
     width: 12.5em;
     margin: 0.625em;
-    border: 1px solid #ccc;
+    border: 0.0625em solid #ccc;
     padding: 0.625em;
     border-radius: 0.625em;
     text-align: center;
@@ -1658,7 +1715,7 @@ footer p {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 1.5em;
-    border: 1px solid #888;
+    border: 0.0625em solid #888;
     border-radius: 0.625em;
     width: auto;
     box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.2), 0 0.375em 1.25em 0 rgba(0, 0, 0, 0.19);
@@ -1751,6 +1808,122 @@ footer p {
     border-top: 0.1875em solid transparent;
     animation: spin 1s linear infinite;
     transform: translateY(-50%);
+}
+.perfil {
+    background-color: #dadada;
+    border: 0.0625em solid #b3b2b2;
+    border-radius: 0.3125em;
+    box-shadow: 0 0 0.625em 0 rgba(0,0,0,0.1);
+    padding: 1.25em;
+    margin-bottom: 1.25em;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.perfil p {
+    font-size: 1.2em;
+    margin-bottom: 0.625em;
+}
+
+.botones-centrados {
+    display: flex;
+    justify-content: center;
+}
+
+.perfil button {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 0.625em 1.25em;
+    border: none;
+    border-radius: 0.4375em;
+    margin: 0 0.625em;
+    cursor: pointer;
+    font-family: 'Amaranth';
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+    text-decoration: none;
+}
+
+.perfil button:hover {
+    background-color: #2ba3b9;
+}
+
+.perfil button#deleteAccount {
+    background-color: #f44336;
+}
+
+.perfil button#deleteAccount:hover {
+    background-color: #da190b;
+}
+
+.perfil-form {
+    background-color: #f0f0f0;
+    padding: 1.25em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 0.625em 0 rgba(0,0,0,0.1);
+    width: 50%;
+    margin: 0 auto;
+}
+
+.perfil-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.3125em;
+    color: #222744;
+}
+
+.perfil-form input[type="text"], .perfil-form select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.625em;
+    margin-bottom: 0.625em;
+    border: 0.0625em solid #ddd;
+    border-radius: 0.25em;
+}
+
+.perfil-form input[type="submit"] {
+    background-color: #2F4C5C;
+    color: white;
+    padding: 0.625em 1.25em;
+    border: none;
+    border-radius: 0.25em;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-family: 'Amaranth';
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.perfil-form input[type="submit"]:hover {
+    background-color: #2ba3b9;
+}
+
+.perfil-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.perfil-form input[type="submit"],
+.perfil-form a {
+    flex: 1;
+    margin: 0 0.625em;
+}
+
+.perfil-form a {
+    background-color: orange;
+    color: white;
+    padding: 0.625em 1.25em;
+    border: none;
+    border-radius: 0.25em;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1em;
+    font-family: 'Amaranth';
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
 }
 
 /* Animaciones */
@@ -1909,7 +2082,7 @@ footer p {
     nav ul li {
         width: 100%;
         text-align: center;
-        border: 1px solid #ffffff;
+        border: 0.0625em solid #ffffff;
         border-radius: 0.3125em;
         margin: 0.3125em 0;
     }

@@ -73,14 +73,14 @@ include __DIR__ . '/../includes/head.php';
                         echo '</div>';
                         echo '<div class="nft-info">';
                         echo '<h2>' . ucfirst(htmlspecialchars($row["nombre_nft"])) . '</h2>';
+                        echo '<div class="price-cart">';
                         echo '<p>Precio: ' . htmlspecialchars($row["precio"]) . ' ETH</p>';
-                        echo '<p><span style="color: ' . ($row["disponible"] ? 'green' : 'red') . ';">' . ($row["disponible"] ? 'DISPONIBLE' : 'NO DISPONIBLE') . '</span></p>';
-                        echo '<div class="button-cart-container-2">';
                         echo '<form class="add-to-cart-form" method="POST" action="/nft?id=' . $id_nft . '">';
                         echo '<input type="hidden" name="product_id" value="' . htmlspecialchars($row['id_nft']) . '">';
                         echo '<button type="submit" class="add-to-cart"><i class="fas fa-shopping-cart"></i> Agregar al carrito</button>';
                         echo '</form>';
                         echo '</div>';
+                        echo '<p><span style="color: ' . ($row["disponible"] ? 'green' : 'red') . ';">' . ($row["disponible"] ? 'DISPONIBLE' : 'NO DISPONIBLE') . '</span></p>';
                         echo '</div>';
                         echo '</div>';
                     } else {
@@ -94,8 +94,8 @@ include __DIR__ . '/../includes/head.php';
             }
             ?>
         </div>
+        <h3>Otros NFTs de la colección:</h3>
         <div class="collection-preview">
-            <h3>Otros NFTs de la colección:</h3>
             <?php
             if (isset($nombre_coleccion)) {
                 $query = "SELECT * FROM NFT WHERE coleccion = ? AND id_nft != ?";
@@ -110,7 +110,7 @@ include __DIR__ . '/../includes/head.php';
                             echo '<a href="nft.php?id=' . htmlspecialchars($row["id_nft"]) . '">';
                             echo '<img src="img/colecciones/' . $nombre_coleccion . '/' . htmlspecialchars($row["nombre_nft"]) . '.png" alt="' . htmlspecialchars($row["nombre_nft"]) . '">';
                             echo '</a>';
-                            echo '<p>' . ucfirst(htmlspecialchars($row["nombre_nft"])) . '</p>';
+                            echo '<strong>' . ucfirst(htmlspecialchars($row["nombre_nft"])) . '</strong>';
                             echo '</div>';
                         }
                     } else {
@@ -127,15 +127,22 @@ include __DIR__ . '/../includes/head.php';
 <style>
     .nft-details-container {
         display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Centra el contenido horizontalmente */
+        margin-bottom: 20px;
     }
 
     .nft-details {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        width: 100%;
+        max-width: 1200px; /* Ajustar según la proporción deseada */
+        margin-bottom: 20px;
     }
 
     .nft-image {
         flex: 0 0 40%; /* Ajustar según la proporción deseada */
+        padding-right: 20px;
     }
 
     .nft-image img {
@@ -144,7 +151,7 @@ include __DIR__ . '/../includes/head.php';
     }
 
     .nft-info {
-        flex: 0 0 60%; /* Ajustar según la proporción deseada */
+        flex: 1; /* Ajustar según la proporción deseada */
         padding-left: 20px;
     }
 
@@ -159,46 +166,63 @@ include __DIR__ . '/../includes/head.php';
         margin-bottom: 8px;
     }
 
+    .price-cart {
+        display: flex;
+        align-items: center;
+    }
+
+    .price-cart p {
+        margin-right: 20px;
+    }
+
     .button-cart-container-2 {
         margin-top: 20px;
     }
 
     .collection-preview {
-        flex: 0 0 30%;
-        padding-left: 20px;
-        border-left: 1px solid #ccc;
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+        display: flex;
+        display: flex;
+        overflow-x: auto;
+        margin: 0 auto; /* Centra horizontalmente */
+        border-left: none; /* Elimina cualquier borde izquierdo */
     }
 
     .collection-preview h3 {
+        flex: 0 0 100%;
         margin-top: 0;
+        text-align: center;
     }
 
     .collection-item {
-        margin-bottom: 20px;
+        flex: 0 0 auto;
+        margin-right: 10px; 
         text-align: center;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        box-sizing: border-box;
     }
 
     .collection-item img {
-        width: calc(25% - 10px); /* Ajustar según el espacio disponible */
-        margin-right: 20px; /* Espacio entre las imágenes */
-        margin-bottom: 20px;
+        width: 10em;
+        height: auto;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        transition: transform 0.3s;
     }
 
-    .collection-item:nth-child(4n+4) img {
-        margin-right: 0; /* Eliminar el margen derecho en el cuarto elemento de cada fila */
+    .collection-item img:hover {
+        transform: scale(1.1);
     }
 
-    .collection-item:last-child img {
-        margin-right: 0; /* Eliminar el margen derecho en el último elemento de la lista */
-    }
-
-    .collection-item p {
-        display: none;
+    .collection-item strong {
+        font-weight: bold; /* Pone el nombre de las fotos en negrita */
+        display: block;
+        margin-top: 5px;
+        font-size: 14px; /* Tamaño de fuente del nombre */
     }
 </style>
+
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 <script>
@@ -228,6 +252,10 @@ include __DIR__ . '/../includes/head.php';
                             messageHeader.css('opacity', '0');
                         }, 3000);
                     }
+                    // Recarga la página después de agregar al carrito, con un retraso de 1 segundo
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
                 }
             });
         });

@@ -103,53 +103,84 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
                     case 'perfil':
                         $id_usuario = $_SESSION['usuario']['id'];
 
-                            $query = "SELECT dni_usuario, nombre_usuario, apellidos_usuario, email_usuario, telefono_usuario 
-                                         FROM Usuarios WHERE id_usuario = ?";
-                            
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar'])) {
+                            $query = "SELECT id_pedido FROM Pedidos_NFT WHERE id_usuario = ?";
                             $stmt = $conexion->prepare($query);
                             $stmt->bind_param("i", $id_usuario);
                             $stmt->execute();
-                            $stmt->bind_result($dni, $nombre, $apellidos, $correo, $telefono);
-                            $stmt->fetch();
+                            $result = $stmt->get_result();
+                            $pedidos = $result->fetch_all(MYSQLI_ASSOC);
                             $stmt->close();
-                            
-                                echo '<div class="perfil">';
-                                echo '<div class="foto-nombre">';
-                                echo '<div id="overlay" class="overlay"></div>';
-                                echo '<div class="perfil-img-wrapper">';
-                                echo '<img class="perfil-img" src="/images.php?token_foto=' . $_SESSION['usuario']['token_foto'] . '" id="uploaded_image" alt="Imagen de perfil">';
-                                echo '<div class="perfil-img-text">Cambiar</div>';
-                                echo '<input type="file" name="image" class="image" id="upload_image" accept="image/*" style="display:none">';
-                                echo '</div>';
-                                echo '<h1>' . $nombre . ' ' . $apellidos . '</h1>';
-                                echo '</div>';
-                                ?>
-                                <div class="modal-foto" id="modal-foto">
-                                    <div class="modal-content">
-                                        <div class="recortar-imagen">
-                                            <h3>Recortar Imagen</h3>
-                                            <span class="close">&times;</span>
-                                        </div>
-                                        <div class="img-container">
-                                            <img id="sample_image" src="" alt="Sample Image">
-                                        </div>
-                                        <div class="button-container">
-                                            <button id="crop">Recortar</button>
-                                            <button id="cancel">Cancelar</button>
-                                        </div>
+                        
+                            foreach ($pedidos as $pedido) {
+                                $query = "DELETE FROM Detalle_Pedido WHERE id_pedido = ?";
+                                $stmt = $conexion->prepare($query);
+                                $stmt->bind_param("i", $pedido['id_pedido']);
+                                $stmt->execute();
+                                $stmt->close();
+                            }
+                        
+                            $query = "DELETE FROM Pedidos_NFT WHERE id_usuario = ?";
+                            $stmt = $conexion->prepare($query);
+                            $stmt->bind_param("i", $id_usuario);
+                            $stmt->execute();
+                            $stmt->close();
+                        
+                            $query = "DELETE FROM Usuarios WHERE id_usuario = ?";
+                            $stmt = $conexion->prepare($query);
+                            $stmt->bind_param("i", $id_usuario);
+                            $stmt->execute();
+                            $stmt->close();
+                        }
+
+                        $query = "SELECT dni_usuario, nombre_usuario, apellidos_usuario, email_usuario, telefono_usuario 
+                                        FROM Usuarios WHERE id_usuario = ?";
+                        
+                        $stmt = $conexion->prepare($query);
+                        $stmt->bind_param("i", $id_usuario);
+                        $stmt->execute();
+                        $stmt->bind_result($dni, $nombre, $apellidos, $correo, $telefono);
+                        $stmt->fetch();
+                        $stmt->close();
+                        
+                            echo '<div class="perfil">';
+                            echo '<div class="foto-nombre">';
+                            echo '<div id="overlay" class="overlay"></div>';
+                            echo '<div class="perfil-img-wrapper">';
+                            echo '<img class="perfil-img" src="/images.php?token_foto=' . $_SESSION['usuario']['token_foto'] . '" id="uploaded_image" alt="Imagen de perfil">';
+                            echo '<div class="perfil-img-text">Cambiar</div>';
+                            echo '<input type="file" name="image" class="image" id="upload_image" accept="image/*" style="display:none">';
+                            echo '</div>';
+                            echo '<h1>' . $nombre . ' ' . $apellidos . '</h1>';
+                            echo '</div>';
+                            ?>
+                            <div class="modal-foto" id="modal-foto">
+                                <div class="modal-content">
+                                    <div class="recortar-imagen">
+                                        <h3>Recortar Imagen</h3>
+                                        <span class="close">&times;</span>
+                                    </div>
+                                    <div class="img-container">
+                                        <img id="sample_image" src="" alt="Sample Image">
+                                    </div>
+                                    <div class="button-container">
+                                        <button id="crop">Recortar</button>
+                                        <button id="cancel">Cancelar</button>
                                     </div>
                                 </div>
-                                <?php
-                                echo '<div style="text-align: center; margin-top: 3em;">';
-                                echo '<p><strong>DNI:</strong> ' . $dni . '</p>';
-                                echo '<p><strong>Correo electrónico:</strong> ' . $correo . '</p>';
-                                echo '<p><strong>Teléfono:</strong> ' . $telefono . '</p>';
-                                echo '</div>';
-                                
-                                echo '<div class="botones-centrados">';
-                                echo '<button onclick="location.href=\'/cuenta?perfil-edit\'">Editar</button>';
-                                echo '</div>';
-                                echo '</div>';
+                            </div>
+                            <?php
+                            echo '<div style="text-align: center; margin-top: 3em;">';
+                            echo '<p><strong>DNI:</strong> ' . $dni . '</p>';
+                            echo '<p><strong>Correo electrónico:</strong> ' . $correo . '</p>';
+                            echo '<p><strong>Teléfono:</strong> ' . $telefono . '</p>';
+                            echo '</div>';
+                            
+                            echo '<div class="botones-centrados">';
+                            echo '<button onclick="location.href=\'/cuenta?perfil-edit\'">Editar</button>';
+                            echo '<button id="deleteAccount" data-user-id="' . $_SESSION['usuario']['id'] . '">Eliminar cuenta</button>';
+                            echo '</div>';
+                            echo '</div>';
                             break;
                         case 'perfil-edit':
                             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -872,6 +903,34 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
             });
         });
 
+        document.getElementById('deleteAccount').addEventListener('click', function() {
+            var userId = this.getAttribute('data-user-id');
+        
+            if (confirm('¿Estás seguro/a de que quieres eliminar la cuenta? Esta acción no es reversible.')) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/cuenta?perfil', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    if (this.status === 200) {
+                        var logoutXhr = new XMLHttpRequest();
+                        logoutXhr.open('POST', '/logout', true);
+                        logoutXhr.onload = function() {
+                            if (logoutXhr.status === 200) {
+                                localStorage.clear();
+                                window.location.href = "/";
+                            }
+                        };
+                        logoutXhr.onerror = function() {
+                            console.error("Error occurred while logging out.");
+                        };
+                        logoutXhr.send();
+                    } else {
+                        alert('Hubo un error al eliminar la cuenta.');
+                    }
+                };
+                xhr.send('id_usuario=' + encodeURIComponent(userId) + '&eliminar=true');
+            }
+        });
     </script>
 </body>
 </html>
