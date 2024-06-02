@@ -19,6 +19,16 @@ if (dropdown) {
             }, 1000);
         }
     });
+
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            dropdownMenu.style.animation = 'fadeOut 1s forwards';
+            dropdownIcon.classList.remove('rotate-icon');
+            setTimeout(function() {
+                dropdownMenu.style.display = 'none';
+            }, 1000);
+        }
+    });
 }
 
 var dropdownButton = document.querySelector('.dropdown-menu-button');
@@ -165,49 +175,20 @@ window.addEventListener('resize', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    var isMobile = window.matchMedia("only screen and (max-width: 972px)").matches;
     var cartIcon = document.getElementById('cart-icon');
-    var logoutElement = document.getElementById('logout');
     var dropdown = document.querySelector('.cart-dropdown');
 
     if (cartIcon) {
-        if (isMobile) {
-            cartIcon.addEventListener('click', function() {
-                if (dropdown) {
-                    dropdown.classList.toggle('show');
-                }
-            });
-        } else {
-            cartIcon.addEventListener('mouseover', function() {
-                if (dropdown) {
-                    dropdown.classList.add('show');
-                }
-            });
+        cartIcon.addEventListener('mouseover', function() {
+            if (dropdown) {
+                dropdown.classList.add('show');
+            }
+        });
 
-            cartIcon.addEventListener('mouseout', function() {
-                if (dropdown) {
-                    dropdown.classList.remove('show');
-                }
-            });
-        }
-    }
-
-    if (logoutElement) {
-        logoutElement.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/logout', true);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    localStorage.clear();
-                    window.location.href = "/";
-                }
-            };
-            xhr.onerror = function() {
-                console.error("Error occurred while logging out.");
-            };
-            xhr.send();
+        cartIcon.addEventListener('mouseout', function() {
+            if (dropdown) {
+                dropdown.classList.remove('show');
+            }
         });
     }
 });

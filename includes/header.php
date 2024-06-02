@@ -37,7 +37,7 @@
                                 echo '<li><a href="/nft-admin">NFTs</a></li>';
                             }
                         ?>
-                        <li><a href="#" id="logout">Cerrar sesión</a></li>
+                        <li><a href="/logout" id="logout">Cerrar sesión</a></li>
                     </ul>
                 </nav>
             <?php
@@ -105,7 +105,7 @@
                 <a href="/"><h1>Dialpi NFT</h1></a>
             </div>
             <div id="cart-icon">
-                <a><i class="fas fa-shopping-cart"></i></a>
+                <a href="/carrito"><i class="fas fa-shopping-cart"></i></a>
                 <?php
                     $cartCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                     echo "<span class='cart-count'>$cartCount</span>";
@@ -180,7 +180,7 @@
                                 echo '<a href="/nft-admin"><li>NFTs</li></a>';
                             }
                             ?>
-                            <a href="#" id="logout"><li>Cerrar sesión</li></a>
+                            <a href="/logout" id="logout"><li>Cerrar sesión</li></a>
                         </ul>
                     </li>
                 <?php else: ?>

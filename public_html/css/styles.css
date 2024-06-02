@@ -378,8 +378,8 @@ h2 {
 
 .collection-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+    grid-gap: 1.25em;
 }
 
 .collection-box, .collection-box-disabled {
@@ -508,7 +508,7 @@ h2 {
     background-color: darkorange;
 }
 
-.login-form input[type="submit"] {
+.login-form input[type="submit"], .login-form #login-button {
     background-color: #2F4C5C;
     color: white;
     padding: 0.625em 1.25em;
@@ -521,7 +521,7 @@ h2 {
     transition: background-color 0.3s ease;
 }
 
-.login-form input[type="submit"]:hover {
+.login-form input[type="submit"]:hover, .login-form #login-button:hover {
     background-color: #2ba3b9;
 }
 
@@ -559,6 +559,27 @@ h2 {
     color: #578492;
 }
 
+.login-form #login-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loading {
+    display: none;
+    margin-right: 0.625em;
+}
+
+.spinner {
+    border: 0.25em solid #ffffff;
+    border-radius: 50%;
+    border-top: 0.25em solid #69899b;
+    width: 0.75em;
+    height: 0.75em;
+    animation: spin2 2s linear infinite;
+}
+
 /* Estilos de la página colección */
 .collection-cover {
     position: relative;
@@ -589,8 +610,8 @@ h2 {
 
 .nft-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+    grid-gap: 1.25em;
     margin-top: 3.125em;
 }
 
@@ -710,41 +731,116 @@ h2 {
 
 .nft-details-container {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-bottom: 1.25em;
 }
 
 .nft-details {
-    flex: 0 0 60%;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: 1.25em;
 }
 
 .nft-image {
-    margin-right: 1.25em;
+    flex: 0 0 18.75em;
+    padding-right: 1.25em;
+}
+
+.nft-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.625em;
 }
 
 .nft-info {
-    max-width: 37.5em;
+    flex: 1;
+    padding-left: 1.25em;
+    box-sizing: border-box;
 }
 
 .nft-info h2 {
     margin-top: 0;
+    font-size: 1.5em;
+    margin-bottom: 0.625em;
 }
 
-.button-cart-container-2 {
-    margin-top: 1.25em;
+.nft-info p {
+    font-size: 1.125em;
+    margin-bottom: 0.5em;
+}
+
+.price-cart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.price-cart p {
+    margin-right: 1.25em;
+    white-space: nowrap;
+}
+
+.price-cart .add-to-cart {
+    white-space: nowrap;
+}
+
+.description-title {
+    font-size: 1.125em;
+    font-weight: bold;
+    margin-bottom: 0.25em;
+}
+
+.nft-description {
+    font-size: 1em;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    width: 100%;
+    text-align: justify;
 }
 
 .collection-preview {
-    flex: 0 0 30%;
-    padding-left: 1.25em;
-    border-left: 0.0625em solid #ccc;
+    width: 100%;
+    padding-left: 0.625em;
+    padding-right: 0.625em;
+    display: flex;
+    overflow-x: auto;
+    margin: 0 auto;
+    border-left: none;
 }
 
 .collection-preview h3 {
+    flex: 0 0 100%;
     margin-top: 0;
+    text-align: center;
 }
 
 .collection-item {
-    margin-bottom: 1.25em;
+    flex: 0 0 auto;
+    margin-right: 0.625em;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.collection-item img {
+    width: 10em;
+    height: auto;
+    margin-bottom: 0.625em;
+    border-radius: 0.625em;
+    transition: transform 0.3s;
+}
+
+.collection-item img:hover {
+    transform: scale(1.1);
+}
+
+.collection-item strong {
+    font-weight: bold;
+    display: block;
+    margin-top: 0.3125em;
+    font-size: 0.875em;
 }
 
 /* Estilos para el carrito de compra */
@@ -1306,7 +1402,7 @@ a.boton-paypal {
 .colecciones {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 1.25em;
 }
 
 .colecciones a {
@@ -1644,8 +1740,8 @@ footer p {
 
 .mis-nft-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+    grid-gap: 1.25em;
     margin-top: 1.25em;
 }
 
@@ -1963,6 +2059,11 @@ footer p {
 @keyframes spin {
     0% { transform: translateY(-50%) rotate(0deg); }
     100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+@keyframes spin2 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Media queries para dispositivos móviles */
@@ -2323,6 +2424,10 @@ footer p {
         border-radius: 0.3125em;
         font-size: 1em;
     }
+
+    .colecciones {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
     
 /* Media queries para la barra de búsqueda */
@@ -2599,7 +2704,7 @@ footer p {
         font-size: 1.5em;
     }
     
-    .login-form input[type="submit"] {
+    .login-form input[type="submit"], .login-form #login-button {
         padding: 0.8em;
         border-radius: 0.5em;
         font-size: 1.5em;
@@ -2627,11 +2732,6 @@ footer p {
     
     .signup-link {
         font-size: 1.8em;
-    }    
-
-    .collection-grid {
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        grid-gap: 40px;
     }
     
     .collection-box {
@@ -2668,11 +2768,6 @@ footer p {
     
     .collection-info {
         padding-left: 3.125em;
-    }
-    
-    .nft-grid {
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        grid-gap: 50px;
     }
     
     .nft-box {
@@ -2886,11 +2981,6 @@ footer p {
         padding: 0.625em;
     }
 
-    .mis-nft-grid {
-        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-        grid-gap: 50px;
-    }
-
     .nft {
         width: auto;
     }
@@ -2908,7 +2998,7 @@ footer p {
         margin-right: 0.8em;
     }
 
-    .vender-nft-container .login-form input[type="submit"] {
+    .vender-nft-container .login-form input[type="submit"], .vender-nft-container .login-form #login-button {
         font-size: 1em;
     }
 }

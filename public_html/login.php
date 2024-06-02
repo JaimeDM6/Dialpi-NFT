@@ -1,6 +1,16 @@
-
 <?php
 session_start();
+
+if (isset($_SESSION['usuario'])) {
+    header('Location: /');
+    exit;
+}
+
+$title = 'Iniciar sesión';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include __DIR__ . '/../includes/functions.php';
 include __DIR__ . '/../includes/head.php';
     include __DIR__ . '/../includes/header-center.php';
@@ -17,7 +27,12 @@ include __DIR__ . '/../includes/head.php';
                 <input type="password" id="password" name="password" required autocomplete="current-password">
                 <i class="fas fa-eye" id="toggle-password"></i>
             </div>
-            <input type="submit" value="Iniciar sesión">
+            <button type="submit" id="login-button">
+                <div id="loading">
+                    <div class="spinner"></div>
+                </div>
+                <span>Iniciar sesión</span>
+            </button>
             <p class="signup-link">¿No tienes cuenta? <a href="/signup">Regístrate</a></p>
         </form>
     </main>
@@ -27,17 +42,37 @@ include __DIR__ . '/../includes/head.php';
         $('.login-form').on('submit', function(e) {
             e.preventDefault();
 
+            $('#login-button').prop('disabled', true).css('cursor', 'not-allowed').css('background-color', '#69899b');
+            $('#login-button span').text('Iniciando sesión...').css('font-style', 'italic');
+            $('#loading').show();
+
             $.ajax({
                 url: '/signin',
                 method: 'POST',
                 data: $(this).serialize(),
                 dataType: 'json',
                 success: function(response) {
+                    $('#loading').hide();
+                    $('#login-button').prop('disabled', false).css('cursor', '').css('background-color', '#2F4C5C');
+                    $('#login-button span').text('Iniciar sesión').css('font-style', 'normal');
+
                     if (response.error) {
                         $('#error-message').text(response.message);
                         $('html, body').animate({ scrollTop: 0 }, 'fast');
                     } else if (response.message === 'success') {
                         window.location.href = '/';
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (textStatus === 'parsererror') {
+                        try {
+                            var errMessage = $.parseJSON(jqXHR.responseText);
+                            console.log(errMessage);
+                        } catch (e) {
+                            console.error('La respuesta no es un JSON válido: ', jqXHR.responseText);
+                        }
+                    } else {
+                        console.log(textStatus, errorThrown);
                     }
                 }
             });

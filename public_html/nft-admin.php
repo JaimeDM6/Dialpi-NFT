@@ -38,42 +38,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $parametro === 'editar') {
     $id = $_POST['id'];
-    $nombre_coleccion = $result->fetch_assoc()['nombre_coleccion'];
 
-    $stmt_nft = $conexion->prepare("SELECT id_nft, nombre_nft, coleccion FROM NFT");
+    $stmt_nft = $conexion->prepare("SELECT id_nft, nombre_nft, coleccion FROM NFT WHERE id_nft = ?");
+    $stmt_nft->bind_param('i', $id);
     $stmt_nft->execute();
     $result_nft = $stmt_nft->get_result();
-    while ($row_nft = $result_nft->fetch_assoc()) {
-        if ($row_nft['id_nft'] == $id) {
-            $nombreOriginal = $row_nft['nombre_nft'];
-            break;
-        }
-    }
+    $row_nft = $result_nft->fetch_assoc();
+
+    $nombreOriginal = $row_nft['nombre_nft'];
+    $coleccion = $row_nft['coleccion'];
+
+    $stmt_coleccion = $conexion->prepare("SELECT nombre_coleccion FROM Coleccion_NFT WHERE id_coleccion = ?");
+    $stmt_coleccion->bind_param('i', $coleccion);
+    $stmt_coleccion->execute();
+    $result_coleccion = $stmt_coleccion->get_result();
+    $row_coleccion = $result_coleccion->fetch_assoc();
+
+    $nombre_coleccion = $row_coleccion['nombre_coleccion'];
 
     if ($nombreOriginal != $_POST['nombre']) {
         $oldDir = __DIR__ . '/img/colecciones/' . $nombre_coleccion . '/' . $nombreOriginal . '.png';
         $newDir = __DIR__ . '/img/colecciones/' . $nombre_coleccion . '/' . $_POST['nombre'] . '.png';
-        rename($oldDir, $newDir);
+        if (!rename($oldDir, $newDir)) {
+            die('Error al cambiar el nombre del archivo.');
+        }
     }
 
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
         $rutaDestino = __DIR__ . '/img/colecciones/' . $nombre_coleccion . '/' . $_POST['nombre'] . '.png';
-    
-        $directorio = dirname($rutaDestino);
         $oldmask = umask(0);
-        if (!is_dir($directorio)) {
-            mkdir($directorio, 0777, true);
+                                
+        if (file_exists($rutaDestino)) {
+            unlink($rutaDestino);
         }
+    
         umask($oldmask);
-        
         move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino);
+        chmod($rutaDestino, 0777);
     }
 
     $stmt = $conexion->prepare('UPDATE NFT SET nombre_nft = ?, precio = ? WHERE id_nft = ?');
     $stmt->bind_param('sdi', $_POST['nombre'], $_POST['precio'], $_POST['id']);
     $stmt->execute();
 
-    header('Location: /nft-admin?nft=' . $row_nft['coleccion']);
+    header('Location: /nft-admin?nft=' . $coleccion);
     exit;
 }
 
@@ -103,17 +111,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $parametro === 'editar') {
 
                             if (isset($_FILES['foto']) && $_FILES['foto']['error'][$i] === UPLOAD_ERR_OK) {
                                 $destino = __DIR__ . "/img/colecciones/$nombre_coleccion/";
+                                $oldmask = umask(0);
                                 if (!file_exists($destino)) {
-                                    $oldmask = umask(0);
                                     if (!mkdir($destino, 0777, true)) {
                                         die('Error al crear el directorio.');
                                     }
-                                    umask($oldmask);
                                 }
+                                umask($oldmask);
                                 $destino .= $nombre . '.png';
                                 if (!move_uploaded_file($_FILES['foto']['tmp_name'][$i], $destino)) {
                                     die('Error al mover el archivo cargado.');
                                 }
+                                chmod($destino, 0777);
                             } else {
                                 die('Error al cargar el archivo: ' . $_FILES['foto']['error'][$i]);
                             }
@@ -159,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $parametro === 'editar') {
                         $result_nft = $stmt_nft->get_result();
                         $row_nft = $result_nft->fetch_assoc();
                         ?>
-                        <form method="POST" class="login-form" id="editar-nft">
+                        <form method="POST" class="login-form" id="editar-nft" enctype="multipart/form-data">
                             <input type="hidden" name="id" value="<?= $row_nft['id_nft'] ?>">
                             
                             <label for="nombre">Nombre</label>
@@ -218,6 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $parametro === 'editar') {
                             echo '<div class="nft-box">';
                             $imagePath = 'img/colecciones/' . $row["nombre_coleccion"] . '/' . $row_nft["nombre_nft"] . '.png';
                             if (file_exists($imagePath)) {
+                                $imagePath .= '?' . filemtime($imagePath);
                                 echo '<img class="coleccion-img" src="' . $imagePath . '" alt="' . $row_nft["nombre_nft"] . '">';
                             }
                             echo '<h3>' . ucfirst($row_nft["nombre_nft"]) . '</h3>';
