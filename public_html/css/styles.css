@@ -2567,6 +2567,10 @@ footer p {
         font-size: 1.2em;
     }
 
+    .logo h1 {
+        font-size: 1.25em;
+    }
+
     nav ul {
         display: flex;
         flex-direction: row;
