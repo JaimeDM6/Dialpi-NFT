@@ -1669,6 +1669,11 @@ footer p {
     align-items: center;
 }
 
+.contenido .perfil-centrado {
+    text-align: center;
+    margin-top: 3em;
+}
+
 .perfil-img-wrapper {
     position: relative;
     display: flex;
@@ -2352,7 +2357,7 @@ footer p {
     }
     
     .cuenta-izq, .invitado-form, .direccion-form, .direccion, .metodo-pago, .tarjeta-credito {
-        width: 80%;
+        width: 70%;
     }
     
     .cuenta-der {
@@ -2427,6 +2432,47 @@ footer p {
 
     .colecciones {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+    .container-cuenta {
+        flex-direction: column;
+        padding-top: 0;
+        margin: 0 auto;
+        align-items: center;
+        width: 90%;
+    }
+
+    .menu-columna {
+        order: 1;
+        border-right: none;
+        width: 85%;
+    }
+
+    .menu-columna ul li.active {
+        border-radius: 0.3125em;
+    }
+
+    .contenido {
+        order: 2;
+        width: 100%;
+    }
+
+    .contenido .perfil-centrado {
+        margin-top: 2em;
+    }
+
+    .contenido .perfil h1 {
+        margin-left: 1.2em;
+        width: 40%;
+    }
+
+    .contenido .login-form {
+        width: 70%;
+    }
+
+    .perfil {
+        width: 70%;
+        font-size: 0.8em;
     }
 }
     
@@ -2533,8 +2579,8 @@ footer p {
         font-size: 0.8em;
     }
 
-    #cart-icon {
-        font-size: 1.3em;
+    #cart-icon i {
+        font-size: 1em;
     }
 
     .cart-count {
@@ -2543,6 +2589,19 @@ footer p {
         width: 1.5625em;
         height: 1.5625em;
         font-size: 0.8em;
+    }
+
+    .cart-dropdown {
+        font-size: 0.8em;
+    }
+
+    .login-form {
+        width: 30%;
+        font-size: 1.1em;
+    }
+    
+    .metodo-pago {
+        width: 50%;
     }
 }
 
@@ -2560,7 +2619,7 @@ footer p {
 @media only screen and (min-width: 2160px) {
     .container {
         width: 70%;
-        font-size: 2.25em;
+        font-size: 1.5em;
     }
 
     .container h2 {
@@ -2568,8 +2627,9 @@ footer p {
     }
 
     .container-header {
-        font-size: 1.3em;
+        font-size: 1em;
         height: 9.375em;
+        width: 70%;
     }
 
     .container-header-centered {
@@ -2577,7 +2637,7 @@ footer p {
     }
 
     .logo h1 {
-        font-size: 3em;
+        font-size: 2.5em;
     }
 
     .logo img {
@@ -2685,8 +2745,9 @@ footer p {
     }
     
     .login-form {
-        font-size: 1.5em;
+        font-size: 1.25em;
         padding: 3.125em;
+        width: 30%;
     }
     
     .login-form label {
@@ -2860,7 +2921,7 @@ footer p {
     }
 
     .metodo-pago {
-        width: 70%;
+        width: 50%;
     }
     
     .tarjeta-credito {
@@ -2905,10 +2966,11 @@ footer p {
     .modal .modal-content {
         padding: 2.5em;
         border-radius: 1.25em;
+        width: 30%;
     }
     
     .fecha-cvv {
-        width: 112%;
+        width: 110%;
     }
     
     .metodo-pago-botones {

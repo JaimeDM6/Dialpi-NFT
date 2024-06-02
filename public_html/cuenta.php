@@ -170,7 +170,7 @@ $parametro = array_key_first($_GET) ? array_key_first($_GET) : 'perfil';
                                 </div>
                             </div>
                             <?php
-                            echo '<div style="text-align: center; margin-top: 3em;">';
+                            echo '<div class="perfil-centrado">';
                             echo '<p><strong>DNI:</strong> ' . $dni . '</p>';
                             echo '<p><strong>Correo electrónico:</strong> ' . $correo . '</p>';
                             echo '<p><strong>Teléfono:</strong> ' . $telefono . '</p>';

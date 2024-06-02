@@ -28,7 +28,15 @@
                         echo '<img src="img/colecciones/' . $row["nombre_coleccion"] . '/' . $row["nombre_coleccion"] . '1.png" alt="' . $row["nombre_coleccion"] . '">';
                         echo '<h3>' . ucfirst($row["nombre_coleccion"]) . '</h3>';
                         echo '<p>Creador: ' . $row["creador"] . '</p>';
-                        echo '<p style="margin-bottom: 10px;">Precio: ' . $row["precio_coleccion"] . ' ETH</p>';
+                        $stmt_sum = $conexion->prepare("SELECT IFNULL(SUM(precio), 0) as total_precio FROM NFT WHERE coleccion = ?");
+                        $stmt_sum->bind_param("i", $row["id_coleccion"]);
+                        $stmt_sum->execute();
+                        $result_sum = $stmt_sum->get_result();
+                        
+                        if ($result_sum && $result_sum->num_rows > 0) {
+                            $row_sum = $result_sum->fetch_assoc();
+                            echo '<p style="margin-bottom: 10px;">Precio: ' . $row_sum["total_precio"] . ' ETH</p>';
+                        }
                         echo '</a>';
                         echo '</div>';
                     }
